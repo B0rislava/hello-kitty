@@ -75,3 +75,6 @@ def update_note(note_id):
         flash('Task not found or unauthorized action.', category='error')
     return redirect(url_for('views.to_do_list'))
   
+@views.route('/meditation')
+def meditation():
+    return render_template("meditation.html", user=current_user)

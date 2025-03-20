@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Meditation Timer{% endblock %}
+{% block content %}
+<h1 class="text-center my-4">Meditation Timer</h1>
+<div class="container">
+    <div class="row">
+        <!-- Timer Section -->
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title text-center">Set Your Meditation Timer</h2>
+                    <form id="timer-form" class="mt-4">
+                        <label for="duration" class="form-label">Choose duration (in minutes):</label>
+                        <input type="number" id="duration" name="duration" min="1" max="60" class="form-control" required>
+                        <button type="button" id="start-button" class="btn btn-primary mt-3 w-100">Start Timer</button>
+                    </form>
+                    <div id="timer-display" class="mt-4 text-center" style="display: none;">
+                        <h3>Time Remaining:</h3>
+                        <div id="time-remaining" class="display-4 text-primary">00:00</div>
+                        <button type="button" id="stop-button" class="btn btn-danger mt-3 w-100">Stop Timer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Benefits Section -->
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title text-center">Benefits of Meditation</h2>
+                    <ul class="list-group list-group-flush mt-3">
+                        <li class="list-group-item">Reduces stress</li>
+                        <li class="list-group-item">Controls anxiety</li>
+                        <li class="list-group-item">Promotes emotional health</li>
+                        <li class="list-group-item">Enhances self-awareness</li>
+                        <li class="list-group-item">Lengthens attention span</li>
+                        <li class="list-group-item">May reduce age-related memory loss</li>
+                        <li class="list-group-item">Can generate kindness</li>
+                        <li class="list-group-item">May help fight addictions</li>
+                        <li class="list-group-item">Improves sleep</li>
+                        <li class="list-group-item">Helps control pain</li>
+                        <li class="list-group-item">Can decrease blood pressure</li>
+                        <li class="list-group-item">You can meditate anywhere</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let timerInterval;
+
+    document.getElementById('start-button').addEventListener('click', function () {
+        const durationInput = document.getElementById('duration');
+        const duration = parseInt(durationInput.value);
+
+        if (isNaN(duration) || duration < 1) {
+            alert('Please enter a valid duration (at least 1 minute).');
+            return;
+        }
+
+        document.getElementById('timer-form').style.display = 'none';
+        document.getElementById('timer-display').style.display = 'block';
+
+        const timeRemainingElement = document.getElementById('time-remaining');
+        let timeRemaining = duration * 60; 
+
+        timerInterval = setInterval(() => {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            timeRemainingElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+            if (timeRemaining <= 0) {
+                clearInterval(timerInterval);
+                alert('Meditation session complete!');
+                location.reload(); 
+            }
+
+            timeRemaining--;
+        }, 1000);
+    });
+
+    document.getElementById('stop-button').addEventListener('click', function () {
+        const confirmStop = confirm('Are you sure you want to stop the meditation session?');
+        if (confirmStop) {
+            clearInterval(timerInterval);
+            alert('Meditation session stopped.');
+            location.reload(); 
+        }
+    });
+</script>
+{% endblock %}
