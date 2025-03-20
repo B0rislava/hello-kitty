@@ -8,23 +8,30 @@
     {% for note in user.notes %}
     <li class="list-group-item d-flex justify-content-between align-items-center">
         <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="note-{{ note.id }}" {% if note.completed %}checked{% endif %}>
-            <label class="form-check-label" for="note-{{ note.id }}">
-                {{ note.data }}
-            </label>
+            <form method="POST" action="{{ url_for('views.update_note', note_id=note.id) }}" style="display: inline;">
+                <input class="form-check-input" type="checkbox" id="note-{{ note.id }}" {% if note.completed %}checked disabled{% endif %}
+                       onchange="this.form.submit()"> <!-- Submit form when checkbox is toggled -->
+                <label class="form-check-label" for="note-{{ note.id }}">
+                    {% if note.completed %}
+                    <s>{{ note.data }}</s> <!-- Strike-through for completed tasks -->
+                    {% else %}
+                    {{ note.data }}
+                    {% endif %}
+                </label>
+            </form>
         </div>
         <div>
             <form method="POST" action="{{ url_for('views.delete_note', note_id=note.id) }}" style="display: inline;">
-                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                <button type="submit" class="btn btn-light text-danger border border-danger">Delete</button>
             </form>
         </div>
     </li>
     {% endfor %}
 </ul>
 <form method="POST">
-  <textarea name="note" id="note" class="form-control" placeholder="Write your note here..."></textarea>
+  <textarea name="note" id="note" class="form-control" placeholder="Write your task here..."></textarea>
   <div align="center" style="margin-top: 10px;">
-    <button type="submit" class="btn btn-light text-danger border border-danger">Add Note</button>
+    <button type="submit" class="btn btn-light text-danger border border-danger">Add Task</button>
   </div>
 </form>
 <a class="nav-item nav-link" id="toDoList" href="/to-do-list">To Do List</a>
