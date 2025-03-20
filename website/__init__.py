@@ -31,9 +31,17 @@ def create_app():
         return User.query.get(int(id))
 
     return app
+    @app.context_processor
+    def inject_user():
+        return dict(user=current_user)
+
+    return app
 
 def create_database(app):
-    if not path.exists('website/'+ DB_NAME):
-        with app.app_context():
-            db.create_all()
-        print("Created Database!")
+    if not path.exists('website/' + DB_NAME):
+        try:
+            with app.app_context():
+                db.create_all()
+            print("Created Database!")
+        except Exception as e:
+            print(f"Error creating database: {e}")

@@ -16,7 +16,7 @@ def login():
         if user:
             if check_password_hash(user.password, password):
                 flash('Logged in successfuly!', category='success')
-                logout_user()
+                login_user(user, remember=True)
                 return redirect(url_for('views.home'))
             else:
                 flash('Incorrrect password, try again.', category='error')
@@ -27,14 +27,14 @@ def login():
 @auth.route('/logout')
 @login_required
 def logout():
-    logout_user
+    logout_user()
     return redirect(url_for('auth.login'))
 
 @auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
     if request.method == 'POST':
         email = request.form.get('email')
-        firstName = request.form.get('firstName')
+        first_name = request.form.get('firstName')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
 
@@ -43,17 +43,17 @@ def sign_up():
             flash('Email already exists.', category='error')
         elif len(email) < 4:
             flash('Email must be greater than 3 characters.', category='error') 
-        elif len(firstName) < 2:
+        elif len(first_name) < 2:
             flash('First name must be greater than 1 characters.', category = 'error')
         elif password1 != password2:
-            flash("Passwords don't match!!", category='error')
-        elif len(password1) < 7:
-            flash("Password must be at least 7 characters.", category='error')
+            flash("Passwords don't match!", category='error')
+        elif len(password1) < 8 or not any(char.isdigit() for char in password1) or not any(char.isalpha() for char in password1):
+            flash("Password must be at least 8 characters long, contain both letters and numbers.", category='error')
         else:
-            new_user = User(email = email, first_name = firstName, password =generate_password_hash(password1))
+            new_user = User(email = email, first_name = first_name, password =generate_password_hash(password1))
             db.session.add(new_user)
             db.session.commit()
-            logout_user()
+            login_user(new_user, remember=True)
             flash("Account created!", category='success')
             return redirect(url_for('views.home'))
 
