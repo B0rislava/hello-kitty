@@ -2,6 +2,8 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for,
 from flask_login import login_required, current_user
 from .models import Note
 from . import db
+from datetime import datetime, timedelta
+from .streak_counter import update_streak
 
 views = Blueprint('views', __name__)
 
@@ -25,12 +27,14 @@ def profile():
 
 @views.route('/redirect_to_profile')
 def redirect_to_profile():
-    flash("Sign in first!", "error")  # Запазва съобщението в session
-    return redirect(url_for("auth.login"))  # Пренасочване към login
+    flash("Sign in first!", "error") 
+    return redirect(url_for("auth.login"))  
 
 @views.route('/to-do-list', methods=['GET', 'POST'])
 @login_required
 def to_do_list():
+    update_streak(current_user)
+
     if request.method == 'POST':
         note_data = request.form.get('note')
         if len(note_data.strip()) < 1:
@@ -41,6 +45,7 @@ def to_do_list():
             db.session.commit()
             flash('Note added!', category='success')
         return redirect(url_for('views.to_do_list'))
+
     return render_template("to_do_list.html", user=current_user)
 
 @views.route('/delete-note/<int:note_id>', methods=['POST'])
@@ -59,8 +64,8 @@ def delete_note(note_id):
 @login_required
 def update_note(note_id):
     note = Note.query.get(note_id)
-    if note and note.user_id == current_user.id:  # Ensure the note belongs to the current user
-        if not note.completed:  # Only allow marking as completed
+    if note and note.user_id == current_user.id: 
+        if not note.completed:  
             note.completed = True
             db.session.commit()
             flash('Task marked as completed!', category='success')

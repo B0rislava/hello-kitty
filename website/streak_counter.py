@@ -1,5 +1,6 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, render_template
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import current_user, login_required
 from .models import User, Note
 from datetime import datetime, timedelta
 
@@ -16,23 +17,18 @@ def update_streak(user):
     incomplete_notes = Note.query.filter_by(user_id=user.id, completed=False).count()
 
     if incomplete_notes == 0:
-        if user.last_active == today - timedelta(days=1):
-            user.streak=+ 1
+        if user.streak_record == today - timedelta(days=1):
+            user.streak_record=+ 1
         else:
-            user.streak = 1
+            user.streak_record = 1
 
         user.last_active = today
         db.session.commit
 
-@app.route('/activity', methods=['POST'])
+@app.route('/to-do-list', methods=['POST'])
+@login_required 
 def record_activity():
-    data = request.json
-    first_name = request.get('first_name')
-    user = User.query.filter_by(first_name=first_name).first()
-
-    if not user:
-        return jsonify({'error': 'User not found'}), 404
-    
+    user = current_user
     update_streak(user)
-    return jsonify({'message': 'Activity recorded', 'streak': user.streak})
+    return render_template('to_do_list.html', streak_record=user.streak_record)
 
