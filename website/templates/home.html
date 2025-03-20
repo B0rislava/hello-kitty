@@ -1,5 +1,13 @@
-{% extends "base.html" %} {% block title %}maznichka{% endblock %}
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
 
 {% block content %}
-<h1>This is the Home Page!!</h1>
+<h1 class="text-center">Home</h1>
+
+<div class="position-absolute" style="top: 100px; left: 25px;">
+    <a href="{{ url_for('views.profile') }}" class="text-decoration-none text-dark font-weight-bold">
+        {{ user.first_name }}
+    </a>
+</div>
+
 {% endblock %}

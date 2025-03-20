@@ -11,6 +11,7 @@ class User(db.Model, UserMixin):
 
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    data = db.Column(db.String(10000))  
+    data = db.Column(db.String(10000))  # Field for note content
     date = db.Column(db.DateTime(timezone=True), default=func.now())
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))  
+    completed = db.Column(db.Boolean, default=False)  # Field to track completion
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))  # Foreign key to User model
