@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <title>Резултати</title>
+</head>
+<body>
+    <h1>Твоите отговори</h1>
+    <ul>
+        {% for answer in answers %}
+            <li>{{ answer }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('views.index') }}">Обратно</a>
+    <a href="{{ url_for('views.home') }}"> home</a>
+</body>
+</html>

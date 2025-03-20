@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <title>Въпросник</title>
+</head>
+<body>
+    <h1>Попълнете въпросника</h1>
+    <form method="POST">
+    {{ form.hidden_tag() }}
+
+    {% for field in form if field.type != 'SubmitField' and field.type != 'CSRFTokenField' %}
+        <p>{{ field.label }}</p>
+        <div>
+            {{ field() }}
+        </div>
+    {% endfor %}
+
+    <p>{{ form.submit() }}</p>
+</form>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+            {% for category, message in messages %}
+                <li class="flash {{ category }}">{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+</body>
+</html>
