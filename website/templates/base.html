@@ -24,7 +24,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <div class="navbar-nav">
                 {% if user.is_authenticated %}
-                <a class="nav-item nav-link" id="home" href="/">Home</a>
+                <a class="nav-item nav-link" id="home" href="{{ url_for('views.home') }}">Home</a>
                 <a class="nav-item nav-link" id="logout" href="/logout">Log out</a>
                 {% else %}
                 <a class="nav-item nav-link" id="login" href="/login">Login</a>

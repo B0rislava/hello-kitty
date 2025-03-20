@@ -5,7 +5,14 @@ from . import db
 
 views = Blueprint('views', __name__)
 
-@views.route('/')
+@views.route("/")
+def welcome():
+    if current_user.is_authenticated:
+        return redirect(url_for("views.home"))
+    return render_template("welcome.html", user=current_user)
+
+
+@views.route('/home')
 @login_required
 def home():
     return render_template("home.html", user=current_user)
