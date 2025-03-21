@@ -23,6 +23,10 @@
                 <a href="{{ url_for('auth.logout') }}" class="btn btn-danger btn-sm" style="border-radius: 20px;">
                     <i class="fa fa-sign-out"></i> Log Out
                 </a>
+                <!-- Edit Profile Button -->
+                <a href="{{ url_for('views.edit_profile') }}" class="btn btn-primary btn-sm" style="border-radius: 20px; margin-left: 10px;">
+                    <i class="fa fa-edit"></i> Edit Profile
+                </a>
             </div>
         </div>
 
@@ -32,40 +36,34 @@
             <div class="position-relative">
                 <img id="character" src="{{ url_for('static', filename='images/default_sprite.png') }}" alt="Character"
                      class="img-fluid" style="width: 220px; height: 220px;">
-                <img id="accessory" src="" class="position-absolute start-50 translate-middle-x" style="top: 0px; width: 100%; height: auto; display: none;">
+                <img id="accessory" src="{{ url_for('static', filename='images/' + (session.get('accessory', '') or '')) }}"
+                     class="position-absolute start-50 translate-middle-x" style="top: 0px; width: 100%; height: auto; display: {{ 'block' if session.get('accessory') else 'none' }};">
             </div>
 
             <!-- Accessories Selection -->
-            <div class="d-flex mt-3">
-                <button class="accessory-btn btn btn-light border mx-1" onclick="changeAccessory('bow.png')">
-                    <img src="{{ url_for('static', filename='images/bow.png') }}" style="width: 40px; height: 40px;">
-                </button>
-                <button class="accessory-btn btn btn-light border mx-1" onclick="changeAccessory('hairpins.png')">
-                    <img src="{{ url_for('static', filename='images/hairpins.png') }}" style="width: 40px; height: 40px;">
-                </button>
-                <button class="accessory-btn btn btn-light border mx-1" onclick="changeAccessory('necklace.png')">
-                    <img src="{{ url_for('static', filename='images/necklace.png') }}" style="width: 40px; height: 40px;">
-                </button>
-                <button class="accessory-btn btn btn-light border mx-1" onclick="changeAccessory('dress.png')">
-                    <img src="{{ url_for('static', filename='images/dress.png') }}" style="width: 40px; height: 40px;">
-                </button>
-                <button class="accessory-btn btn btn-light border mx-1" onclick="changeAccessory('none')">
-                    ❌
-                </button>
-            </div>
+            <form method="POST">
+                <div class="d-flex mt-3">
+                    <button class="accessory-btn btn btn-light border mx-1" name="accessory" value="bow.png">
+                        <img src="{{ url_for('static', filename='images/bow.png') }}" style="width: 40px; height: 40px;">
+                    </button>
+                    <button class="accessory-btn btn btn-light border mx-1" name="accessory" value="hairpins.png">
+                        <img src="{{ url_for('static', filename='images/hairpins.png') }}" style="width: 40px; height: 40px;">
+                    </button>
+                    <button class="accessory-btn btn btn-light border mx-1" name="accessory" value="necklace.png">
+                        <img src="{{ url_for('static', filename='images/necklace.png') }}" style="width: 40px; height: 40px;">
+                    </button>
+                    <button class="accessory-btn btn btn-light border mx-1" name="accessory" value="dress.png">
+                        <img src="{{ url_for('static', filename='images/dress.png') }}" style="width: 40px; height: 40px;">
+                    </button>
+                    <button class="accessory-btn btn btn-light border mx-1" name="accessory" value="none">
+                        ❌
+                    </button>
+                </div>
+                <div class="text-center mt-3">
+                    <button type="submit" class="btn btn-primary">Save Accessory</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
-
-<script>
-    function changeAccessory(accessory) {
-        let accImg = document.getElementById("accessory");
-        if (accessory === "none") {
-            accImg.style.display = "none";
-        } else {
-            accImg.src = `/static/images/${accessory}`;
-            accImg.style.display = "block";
-        }
-    }
-</script>
 {% endblock %}

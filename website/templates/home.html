@@ -4,10 +4,27 @@
 {% block content %}
 <div class="container mt-5">
     <div class="text-center">
-<div class="position-absolute" style="top: 100px; left: 25px;">
-    <a href="{{ url_for('views.profile') }}" class="text-decoration-none text-dark font-weight-bold">
-        {{ user.first_name }}
-    </a>
-</div>
+        <div class="position-absolute" style="top: 100px; left: 25px;">
+            <a href="{{ url_for('views.profile') }}" class="text-decoration-none text-dark font-weight-bold">
+                {{ user.first_name }}
+            </a>
+        </div>
 
+        <!-- Персонаж и аксесоар -->
+        <div class="d-flex justify-content-center align-items-center mt-5">
+            <div class="position-relative">
+                <!-- Персонаж -->
+                <img id="character" src="{{ url_for('static', filename='images/default_sprite.png') }}" alt="Character"
+                     class="img-fluid" style="width: 120px; height: 120px;">
+
+                <!-- Изображение на аксесоара, ако има такъв -->
+                {% if session.get('accessory') %}
+                    <img id="accessory" src="{{ url_for('static', filename='images/' + session['accessory']) }}"
+                         class="position-absolute start-50 translate-middle-x"
+                         style="top: 0px; left: 0px; width: 120px; height: 120px;">
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
