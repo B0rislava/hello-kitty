@@ -123,17 +123,20 @@ def update_note(note_id):
 def meditation():
     return render_template("meditation.html", user=current_user)
 
+
 @views.route('/sleep/log', methods=['POST', 'GET'])
 def log_sleep():
     if request.method == 'POST':
-        
         sleep_duration = get_sleep_duration(current_user.id)
-        session['sleep_duration'] = sleep_duration 
-        
+
+        if sleep_duration:
+            session['sleep_duration'] = sleep_duration[0]
+
         flash('Sleep logged successfully!', 'success')
-        return redirect(url_for('views.home')) 
+        return redirect(url_for('views.home'))
 
     return render_template('sleep.html')
+
 
 @views.route('/sleep/delete/<int:sleep_id>', methods=['POST'])
 def delete_sleep(sleep_id):

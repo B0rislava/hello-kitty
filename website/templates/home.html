@@ -18,18 +18,20 @@
         </div>
     </div>
 
+    <!-- Character -->
     <div class="position-absolute" style="top: 260px; right: 260px;">
         <div class="position-relative">
             <img id="character" src="{{ url_for('static', filename='images/default_sprite.png') }}" 
                  alt="Character" class="img-fluid" style="width: 220px; height: 220px;">
 
+            <!-- Mood Image (dynamically set based on session) -->
             <img id="mouth" src="{{ url_for('static', filename='images/mouth_' + (session.get('mood', 'happy')) + '.png') }}"
                  class="position-absolute start-50 translate-middle-x" style="width: 220px; height: 220px;top: 0px; left: 110px; transform: translateX(-50%);">
 
             {% if session.get('accessory') %}
                 <img id="accessory" src="{{ url_for('static', filename='images/' + session['accessory']) }}"
                      class="position-absolute start-50 translate-middle-x"
-                     style="top: 100px; left: 0px; width: 220px; height: 220px;">
+                     style="top: 0px; left: 0px; width: 220px; height: 220px;">
             {% endif %}
         </div>
     </div>
@@ -60,95 +62,99 @@
         <p id="fun-fact" style="color: #6fb6b6;"></p>
     </div>
 
-    <script>
-        function getGreeting() {
-            let now = new Date();
-            let hour = now.getHours();
-            let greeting;
+<script>
+    function getGreeting() {
+        let now = new Date();
+        let hour = now.getHours();
+        let greeting;
 
-            if (hour < 12) {
-                greeting = "Good morning, {{ user.first_name }}! 🌞";
-            } else if (hour < 18) {
-                greeting = "Good afternoon, {{ user.first_name }}! ☀️";
-            } else {
-                greeting = "Good evening, {{ user.first_name }}! 🌙";
-            }
-            document.getElementById("greeting-text").innerText = greeting;
+        if (hour < 12) {
+            greeting = "Good morning, {{ user.first_name }}! 🌞";
+        } else if (hour < 18) {
+            greeting = "Good afternoon, {{ user.first_name }}! ☀️";
+        } else {
+            greeting = "Good evening, {{ user.first_name }}! 🌙";
         }
-        getGreeting();
+        document.getElementById("greeting-text").innerText = greeting;
+    }
+    getGreeting();
 
-        // Daily affirmation
-        function getDailyAffirmation() {
-            const affirmations = [
-                "You are capable of achieving great things.",
-                "Believe in yourself and all that you are.",
-                "Every day is a new opportunity to grow.",
-                "You are stronger than you think.",
-                "Your potential is limitless.",
-                "You are worthy of love and respect.",
-                "Keep going, you are doing amazing!",
-                "Happiness is a choice, and today you choose joy."
-            ];
-            document.getElementById("affirmation-text").innerText = affirmations[Math.floor(Math.random() * affirmations.length)];
-        }
-        getDailyAffirmation();
+    // Daily affirmation
+    function getDailyAffirmation() {
+        const affirmations = [
+            "You are capable of achieving great things.",
+            "Believe in yourself and all that you are.",
+            "Every day is a new opportunity to grow.",
+            "You are stronger than you think.",
+            "Your potential is limitless.",
+            "You are worthy of love and respect.",
+            "Keep going, you are doing amazing!",
+            "Happiness is a choice, and today you choose joy."
+        ];
+        document.getElementById("affirmation-text").innerText = affirmations[Math.floor(Math.random() * affirmations.length)];
+    }
+    getDailyAffirmation();
 
-        // Fun fact
-        function getFunFact() {
-            const facts = [
-                "Cats sleep for 70% of their lives.",
-                "The Eiffel Tower can be 15 cm taller during the summer.",
-                "Honey never spoils. Archaeologists have found pots of honey in ancient Egyptian tombs that are over 3,000 years old!",
-                "Bananas are berries, but strawberries aren't.",
-                "Octopuses have three hearts."
-            ];
-            document.getElementById("fun-fact").innerText = facts[Math.floor(Math.random() * facts.length)];
-        }
-        getFunFact();
+    // Fun fact
+    function getFunFact() {
+        const facts = [
+            "Cats sleep for 70% of their lives.",
+            "The Eiffel Tower can be 15 cm taller during the summer.",
+            "Honey never spoils. Archaeologists have found pots of honey in ancient Egyptian tombs that are over 3,000 years old!",
+            "Bananas are berries, but strawberries aren't.",
+            "Octopuses have three hearts."
+        ];
+        document.getElementById("fun-fact").innerText = facts[Math.floor(Math.random() * facts.length)];
+    }
+    getFunFact();
 
-        function updateSleepBar(hours) {
-            let percentage = Math.min((hours / 10) * 100, 100);
-            let sleepBar = document.getElementById("sleep-bar");
-            let sleepText = document.getElementById("sleep-hours-text");
+    function updateSleepBar(hours) {
+        let percentage = Math.min((hours / 10) * 100, 100);
+        let sleepBar = document.getElementById("sleep-bar");
+        let sleepText = document.getElementById("sleep-hours-text");
 
-            sleepBar.style.width = percentage + "%";
+        sleepBar.style.width = percentage + "%";
 
-            if (hours <= 6) {
-                sleepBar.style.backgroundColor = "#dc3545";  
-            } else if (hours < 10) {
-                sleepBar.style.backgroundColor = "#ffc107";  
-            } else {
-                sleepBar.style.backgroundColor = "#28a745";  
-            }
-
-            sleepText.innerText = `You slept ${hours} hours`;
+        if (hours <= 6) {
+            sleepBar.style.backgroundColor = "#dc3545";
+        } else if (hours < 10) {
+            sleepBar.style.backgroundColor = "#ffc107";
+        } else {
+            sleepBar.style.backgroundColor = "#28a745";
         }
 
-        document.addEventListener("DOMContentLoaded", function () {
-            let sleepHours = {{ session.get('sleep_duration', 0) }}; 
-            updateSleepBar(sleepHours);
-        });
+        sleepText.innerText = `You slept ${hours} hours`;
+    }
 
-        document.querySelectorAll(".mood-btn").forEach(button => {
-            button.addEventListener("click", function () {
-                const mood = this.getAttribute("data-mood");
-                const suggestions = {
-                    happy: "That's wonderful! Keep spreading positivity and enjoy your day! 🌟",
-                    sad: "It's okay to feel sad sometimes. Take a deep breath and do something you love. 💖",
-                    stressed: "Try some deep breathing or a short walk to clear your mind. You've got this! 🌿",
-                    motivated: "Amazing! Channel that energy into achieving your goals today! 🚀",
-                    neutral: "Rest is important. Take a break and recharge your energy. 🌙"
-                };
-                document.getElementById("mood-suggestion").innerText = suggestions[mood];
+    document.addEventListener("DOMContentLoaded", function () {
+        let sleepHours = {{ session.get('sleep_duration', 0) }};
+        updateSleepBar(sleepHours);
+    });
 
-                // Send mood to the server
-                fetch("/update_mood", {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ mood: mood })
-                });
+    document.querySelectorAll(".mood-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            const mood = this.getAttribute("data-mood");
+            const suggestions = {
+                happy: "That's wonderful! Keep spreading positivity and enjoy your day! 🌟",
+                sad: "It's okay to feel sad sometimes. Take a deep breath and do something you love. 💖",
+                stressed: "Try some deep breathing or a short walk to clear your mind. You've got this! 🌿",
+                motivated: "Amazing! Channel that energy into achieving your goals today! 🚀",
+                neutral: "Rest is important. Take a break and recharge your energy. 🌙"
+            };
+            document.getElementById("mood-suggestion").innerText = suggestions[mood];
+
+            // Correct way to dynamically set the mouth image in JavaScript with Jinja2
+            document.getElementById("mouth").src = "/static/images/mouth_" + mood + ".png";
+
+            // Send mood to the server
+            fetch("/update_mood", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mood: mood })
             });
         });
-    </script>
+    });
+</script>
+
 </div>
 {% endblock %}
