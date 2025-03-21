@@ -9,13 +9,17 @@
             <div class="card shadow-lg rounded-lg" style="background: #ffffff; border-radius: 20px;">
                 <div class="card-body">
                     <h2 class="card-title text-center mb-4" style="color: #2a9d8f; font-family: 'Lora', serif;">Set Your Meditation Timer</h2>
-                    
-                    <form method="POST" class="mt-4">
-                        <label for="duration" class="form-label" style="font-size: 1.1rem; color: #264653;">Choose duration (in minutes):</label>
-                        <input type="number" id="duration" name="duration" min="1" max="60" class="form-control form-control-lg" style="border-radius: 12px; padding: 10px;" required>
-                        
+
+                    <form method="POST" class="mt-4 text-center">
+                        <label for="minutes" class="form-label" style="font-size: 1.1rem; color: #264653; display: block; text-align: center;">Choose duration:</label>
+                        <div class="d-flex justify-content-center mb-3">
+                            <input type="number" id="minutes" name="minutes" min="0" max="60" class="form-control form-control-lg" style="border-radius: 12px; padding: 10px; width: 80px;" placeholder="Min" required>
+                            <span style="font-size: 1.5rem; color: #264653; padding: 0 10px;">:</span>
+                            <input type="number" id="seconds" name="seconds" min="0" max="59" class="form-control form-control-lg" style="border-radius: 12px; padding: 10px; width: 80px;" placeholder="Sec" required>
+                        </div>
+
                         <input type="hidden" id="completed" name="completed" value="false">
-                        
+
                         <button type="submit" id="start-button" class="btn btn-primary mt-4 w-100" style="border-radius: 20px; padding: 12px 20px; font-size: 1.1rem; background: #2a9d8f; border: none;">Start Meditation</button>
                     </form>
 
@@ -57,31 +61,29 @@
 <script>
 let timerInterval;
 let request_sent = false;
+let timeRemaining = 0;
 
 document.getElementById('start-button').addEventListener('click', function (event) {
     event.preventDefault();
-    const durationInput = document.getElementById('duration');
-    const duration = parseInt(durationInput.value);
+    const minutesInput = document.getElementById('minutes');
+    const secondsInput = document.getElementById('seconds');
+    const minutes = parseInt(minutesInput.value);
+    const seconds = parseInt(secondsInput.value);
 
-    if (isNaN(duration) || duration < 1) {
-        alert('Please enter a valid duration (at least 1 minute).');
+    if (isNaN(minutes) || isNaN(seconds) || minutes < 0 || seconds < 0 || seconds > 59) {
+        alert('Please enter a valid duration (minutes and seconds).');
         return;
     }
+
+    timeRemaining = minutes * 60 + seconds;
 
     document.querySelector('form').style.display = 'none';
     document.getElementById('timer-display').style.display = 'block';
 
     const timeRemainingElement = document.getElementById('time-remaining');
-    let timeRemaining = duration * 60;
-
-    const updateTimer = () => {
-        const minutes = Math.floor(timeRemaining / 60);
-        const seconds = timeRemaining % 60;
-        timeRemainingElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-    };
-
     updateTimer();
 
+    // Start the timer
     timerInterval = setInterval(() => {
         if (timeRemaining > 0) {
             timeRemaining--;
@@ -114,9 +116,43 @@ document.getElementById('start-button').addEventListener('click', function (even
             } else {
                 console.log('Meditation task for today has already been logged.');
             }
+
+            // Reset timer after completion (if user presses OK in the popup)
+            if (confirm("Would you like to reset the timer?")) {
+                minutesInput.value = 0;
+                secondsInput.value = 0;
+                timeRemainingElement.textContent = '00:00';
+                document.querySelector('form').style.display = 'block';
+                document.getElementById('timer-display').style.display = 'none';
+            }
         }
     }, 1000);
 });
+
+document.getElementById('stop-button').addEventListener('click', function() {
+    clearInterval(timerInterval); // Stop the timer
+
+    // Reset the timer display and show the form again
+    const timeRemainingElement = document.getElementById('time-remaining');
+    const minutesInput = document.getElementById('minutes');
+    const secondsInput = document.getElementById('seconds');
+    timeRemainingElement.textContent = '00:00';
+    minutesInput.value = 0;
+    secondsInput.value = 0;
+
+    // Hide the timer and show the form to reset the timer
+    document.querySelector('form').style.display = 'block';
+    document.getElementById('timer-display').style.display = 'none';
+});
+
+function updateTimer() {
+    const timeRemainingElement = document.getElementById('time-remaining');
+    const minutes = Math.floor(timeRemaining / 60);
+    const seconds = timeRemaining % 60;
+    timeRemainingElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+}
 </script>
+
+
 
 {% endblock %}
