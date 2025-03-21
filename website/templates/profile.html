@@ -2,13 +2,25 @@
 {% block title %}Profile{% endblock %}
 
 {% block content %}
-<h1 class="text-center">Profile</h1>
-
-<div class="card mx-auto mt-5" style="width: 300px;">
-    <div class="card-body text-center">
-        <h5 class="card-title">{{ user.first_name }}</h5>
-        <p class="card-text"><strong>Email:</strong> {{ user.email }}</p>
+<div class="container mt-5">
+    <div class="card mx-auto shadow-lg" style="width: 350px; border-radius: 15px; overflow: hidden;">
+        <div class="card-header text-center" style="background: #6fb6b6; color: #ffffff;">
+            <h3 class="mb-0">Your Profile</h3>
+        </div>
+        <div class="card-body text-center">
+            <!-- Profile Picture Placeholder -->
+            <div class="mb-4">
+                <img src="https://via.placeholder.com/100" alt="Profile Picture" class="rounded-circle shadow" style="width: 100px; height: 100px;">
+            </div>
+            <!-- User Information -->
+            <h5 class="card-title" style="color: #495057;">{{ user.first_name }}</h5>
+            <p class="card-text" style="color: #6c757d;"><strong>Email:</strong> {{ user.email }}</p>
+        </div>
+        <div class="card-footer text-center" style="background: #f8f9fa;">
+            <a href="{{ url_for('auth.logout') }}" class="btn btn-danger btn-sm" style="border-radius: 20px;">
+                <i class="fa fa-sign-out"></i> Log Out
+            </a>
+        </div>
     </div>
 </div>
-
 {% endblock %}
