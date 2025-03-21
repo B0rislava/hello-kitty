@@ -2,68 +2,88 @@
 {% block title %}Profile{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center">
-        <!-- Profile Card -->
-        <div class="card shadow-lg" style="width: 350px; border-radius: 15px; overflow: hidden;">
-            <div class="card-header text-center" style="background: #6fb6b6; color: #ffffff;">
-                <h3 class="mb-0">Your Profile</h3>
-            </div>
-            <div class="card-body text-center">
+<div class="d-flex justify-content-center align-items-start">
+    <!-- Main Profile Block -->
+    <div class="card" style="width: 350px; height: 900px; border-radius: 25px; overflow: hidden; background-color: #def5ff; margin-left: -200px;">
+        <div class="card-body p-5">
+            <div class="text-center">
                 <!-- Profile Picture -->
-                <div class="mb-4">
-                    <img src="https://via.placeholder.com/100" alt="Profile Picture" class="rounded-circle shadow"
-                         style="width: 100px; height: 100px;">
+                <div class="profile-pic mb-3">
+                    <img src="{{ url_for('static', filename='images/pfp.webp') }}" alt="Profile Picture" class="rounded-circle"
+                         style="width: 150px; height: 150px;">
                 </div>
-                <!-- User Information -->
-                <h5 class="card-title" style="color: #495057;">{{ user.first_name }}</h5>
-                <p class="card-text" style="color: #6c757d;"><strong>Email:</strong> {{ user.email }}</p>
-            </div>
-            <div class="card-footer text-center" style="background: #f8f9fa;">
-                <a href="{{ url_for('auth.logout') }}" class="btn btn-danger btn-sm" style="border-radius: 20px;">
-                    <i class="fa fa-sign-out"></i> Log Out
-                </a>
-                <!-- Edit Profile Button -->
-                <a href="{{ url_for('views.edit_profile') }}" class="btn btn-primary btn-sm" style="border-radius: 20px; margin-left: 10px;">
-                    <i class="fa fa-edit"></i> Edit Profile
-                </a>
+                <!-- Profile Info -->
+                <h3 class="mb-0" style="font-weight: bold;">{{ user.first_name }}</h3>
+                <div style="font-size: 50px; font-style: italic;">“</div>
+                <div style="background-color: #8ed6f5; padding: 15px; border-radius: 10px;">
+                    <p class="mb-0" style="font-size: 16px;"><strong>Email:</strong> {{ user.email }}</p>
+                </div>
+
+                <!-- Edit Profile and Log Out Buttons -->
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{{ url_for('views.edit_profile') }}" class="btn btn-secondary" style="border-radius: 20px;">
+                        <i class="fa fa-edit"></i> Edit Profile
+                    </a>
+                    <a href="{{ url_for('auth.logout') }}" class="btn btn-danger" style="border-radius: 20px;">
+                        <i class="fa fa-sign-out"></i> Log Out
+                    </a>
+                </div>
             </div>
         </div>
+    </div>
 
-        <!-- Character & Accessories -->
-        <div class="d-flex flex-column align-items-center ms-4">
-            <!-- Character Sprite -->
-            <div class="position-relative">
-                <img id="character" src="{{ url_for('static', filename='images/default_sprite.png') }}" alt="Character"
-                     class="img-fluid" style="width: 220px; height: 220px;">
-                <img id="accessory" src="{{ url_for('static', filename='images/' + (session.get('accessory', '') or '')) }}"
-                     class="position-absolute start-50 translate-middle-x" style="top: 0px; width: 100%; height: auto; display: {{ 'block' if session.get('accessory') else 'none' }};">
+    <!-- Right Sidebar with Customization (Tamagotchi and Accessories) -->
+    <div class="d-flex flex-column align-items-center ml-5" style="width: 300px;">
+        <!-- Character Sprite -->
+        <div class="position-relative mb-4">
+            <img id="character" src="{{ url_for('static', filename='images/default_sprite.png') }}" alt="Character"
+                 class="img-fluid" style="width: 220px; height: 220px;">
+            <img id="accessory" src="{{ url_for('static', filename='images/' + (session.get('accessory', '') or '')) }}"
+                 class="position-absolute start-50 translate-middle-x" style="top: 0px; width: 100%; height: auto; display: {{ 'block' if session.get('accessory') else 'none' }};">
+        </div>
+
+        <!-- Customization Menu -->
+        <div class="card" style="width: 100%; background-color: #f5fff7; border-radius: 15px; ">
+            <div class="card-header" style="background-color: #6fb6b6; color: #fff; border-radius: 15px 15px 0 0;">
+                <h5>Customize Your Character</h5>
             </div>
+            <div class="card-body">
+                <form method="POST">
+                    <!-- Hair Accessories -->
+                    <h6>Hair Accessories</h6>
+                    <div class="d-flex mb-3">
+                        <button class="accessory-btn btn btn-light border mx-1" name="accessory" value="hairpins.png">
+                            <img src="{{ url_for('static', filename='images/hairpins.png') }}" style="width: 40px; height: 40px;">
+                        </button>
+                        <button class="accessory-btn btn btn-light border mx-1" name="accessory" value="bow.png">
+                            <img src="{{ url_for('static', filename='images/bow.png') }}" style="width: 40px; height: 40px;">
+                        </button>
+                    </div>
 
-            <!-- Accessories Selection -->
-            <form method="POST">
-                <div class="d-flex mt-3">
-                    <button class="accessory-btn btn btn-light border mx-1" name="accessory" value="bow.png">
-                        <img src="{{ url_for('static', filename='images/bow.png') }}" style="width: 40px; height: 40px;">
-                    </button>
-                    <button class="accessory-btn btn btn-light border mx-1" name="accessory" value="hairpins.png">
-                        <img src="{{ url_for('static', filename='images/hairpins.png') }}" style="width: 40px; height: 40px;">
-                    </button>
-                    <button class="accessory-btn btn btn-light border mx-1" name="accessory" value="necklace.png">
-                        <img src="{{ url_for('static', filename='images/necklace.png') }}" style="width: 40px; height: 40px;">
-                    </button>
-                    <button class="accessory-btn btn btn-light border mx-1" name="accessory" value="dress.png">
-                        <img src="{{ url_for('static', filename='images/dress.png') }}" style="width: 40px; height: 40px;">
-                    </button>
+                    <!-- Clothes -->
+                    <h6>Clothes</h6>
+                    <div class="d-flex mb-3">
+                        <button class="accessory-btn btn btn-light border mx-1" name="accessory" value="dress.png">
+                            <img src="{{ url_for('static', filename='images/dress.png') }}" style="width: 40px; height: 40px;">
+                        </button>
+                    </div>
+
+                    <!-- Jewelry -->
+                    <h6>Jewelry</h6>
+                    <div class="d-flex mb-3">
+                        <button class="accessory-btn btn btn-light border mx-1" name="accessory" value="necklace.png">
+                            <img src="{{ url_for('static', filename='images/necklace.png') }}" style="width: 40px; height: 40px;">
+                        </button>
+                    </div>
+
+                    <!-- Clear Accessory -->
                     <button class="accessory-btn btn btn-light border mx-1" name="accessory" value="none">
-                        ❌
+                        ❌ Clear Accessory
                     </button>
-                </div>
-                <div class="text-center mt-3">
-                    <button type="submit" class="btn btn-primary">Save Accessory</button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </div>
+
 {% endblock %}

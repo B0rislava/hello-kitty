@@ -17,14 +17,14 @@
 
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" 
-        href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" 
+    <link rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         crossorigin="anonymous">
     <!-- Font Awesome -->
-    <link rel="stylesheet" 
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" 
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
         crossorigin="anonymous">
-    
+
     <style>
         body {
             background: linear-gradient(135deg, #e7f2f2, #e2d4f2); /* Soft pastel gradient with depth */
@@ -60,11 +60,15 @@
         }
         .container {
             margin-top: 30px;
-            max-width: 900px;
+            max-width: 1150px;
             background: white;
             padding: 25px;
             border-radius: 12px;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .container.mt-3 {
+            background-color: transparent !important;
+            padding: 0 !important;
         }
         .alert {
             border-radius: 10px;
@@ -79,7 +83,6 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-        <!-- Home Link on the Left -->
         <a class="nav-item nav-link" id="home" href="{{ url_for('views.home') }}" style="color: #5d6063; border-radius: 10px; padding: 8px 15px;">
             <i class="fa fa-home"></i> Home
         </a>
