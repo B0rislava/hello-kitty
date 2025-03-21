@@ -5,6 +5,7 @@ from . import db
 from datetime import datetime
 from .streak_counter import update_streak
 from .sleeptime import get_sleep_duration
+from flask import jsonify
 
 views = Blueprint('views', __name__)
 
@@ -34,21 +35,21 @@ def redirect_to_profile():
 @views.route('/to-do-list', methods=['GET', 'POST'])
 @login_required
 def to_do_list():
-    update_streak(current_user)
-
-    new_note = Note(data="Meditation completed", user_id=current_user.id, completed=True)
-
     if request.method == 'POST':
-        note_data = request.form.get('note')
-        if len(note_data.strip()) < 1:
-            flash('Note cannot be empty!', category='error')
+        if request.is_json:
+            meditation_data = request.get_json()
+            task_text = meditation_data.get('task_data')  
+            meditation_completed = meditation_data.get('completed')  
+            if task_text:
+                meditation_note = Note(data=task_text, user_id=current_user.id, completed=meditation_completed)
+                db.session.add(meditation_note)
+                db.session.commit()
         else:
-            new_note = Note(data=note_data, user_id=current_user.id)
-            db.session.add(new_note)
-            db.session.commit()
-            flash('Note added!', category='success')
-        return redirect(url_for('views.to_do_list'))
-
+            note_text = request.form.get('note')
+            if note_text:
+                new_note = Note(data=note_text, user_id=current_user.id, completed=False)
+                db.session.add(new_note)
+                db.session.commit()
     return render_template("to_do_list.html", user=current_user)
 
 @views.route('/delete-note/<int:note_id>', methods=['POST'])

@@ -14,7 +14,6 @@
                         <label for="duration" class="form-label" style="font-size: 1.1rem; color: #264653;">Choose duration (in minutes):</label>
                         <input type="number" id="duration" name="duration" min="1" max="60" class="form-control form-control-lg" style="border-radius: 12px; padding: 10px;" required>
                         
-                        <!-- Hidden field to track whether meditation is completed or not -->
                         <input type="hidden" id="completed" name="completed" value="false">
                         
                         <button type="submit" id="start-button" class="btn btn-primary mt-4 w-100" style="border-radius: 20px; padding: 12px 20px; font-size: 1.1rem; background: #2a9d8f; border: none;">Start Meditation</button>
@@ -57,66 +56,63 @@
 
 <script>
     let timerInterval;
+    let request_sent = false;
 
     document.getElementById('start-button').addEventListener('click', function (event) {
-        event.preventDefault();
-        const durationInput = document.getElementById('duration');
-        const duration = parseInt(durationInput.value);
+    event.preventDefault();
+    const durationInput = document.getElementById('duration');
+    const duration = parseInt(durationInput.value);
 
-        if (isNaN(duration) || duration < 1) {
-            alert('Please enter a valid duration (at least 1 minute).');
-            return;
-        }
+    if (isNaN(duration) || duration < 1) {
+        alert('Please enter a valid duration (at least 1 minute).');
+        return;
+    }
 
-        document.querySelector('form').style.display = 'none';
-        document.getElementById('timer-display').style.display = 'block';
+    document.querySelector('form').style.display = 'none';
+    document.getElementById('timer-display').style.display = 'block';
 
-        const timeRemainingElement = document.getElementById('time-remaining');
-        let timeRemaining = duration * 60; 
+    const timeRemainingElement = document.getElementById('time-remaining');
+    let timeRemaining = duration * 60;
 
-        const updateTimer = () => {
-            const minutes = Math.floor(timeRemaining / 60);
-            const seconds = timeRemaining % 60;
-            timeRemainingElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-        };
+    const updateTimer = () => {
+        const minutes = Math.floor(timeRemaining / 60);
+        const seconds = timeRemaining % 60;
+        timeRemainingElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    };
 
-        updateTimer();
+    updateTimer();
 
-        timerInterval = setInterval(() => {
-            if (timeRemaining > 0) {
-                timeRemaining--;
-                updateTimer();
-            } else {
-                clearInterval(timerInterval);
-                alert('Meditation session complete!');
-
-                fetch('/meditation-completed', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        message: 'Meditation completed'
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data.message);
-                    location.reload();
-                })
-                .catch(error => console.error('Error:', error));
-            }
-        }, 1000);
-    });
-
-    document.getElementById('stop-button').addEventListener('click', function () {
-        const confirmStop = confirm('Are you sure you want to stop the meditation session?');
-        if (confirmStop) {
+    timerInterval = setInterval(() => {
+        if (timeRemaining > 0) {
+            timeRemaining--;
+            updateTimer();
+        } else {
             clearInterval(timerInterval);
-            alert('Meditation session stopped.');
-            location.reload(); 
+            alert('Meditation session complete!');
+
+            if (!requestSent) {
+                requestSent = true;
+
+            fetch('/to-do-list', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    task_data: 'Meditation completed',
+                    completed: true
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message);
+                location.reload(); 
+            })
+            .catch(error => console.error('Error:', error));
+            }
         }
-    });
+    }, 1000);
+});
 </script>
 
 {% endblock %}

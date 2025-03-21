@@ -91,6 +91,9 @@
             <a class="nav-item nav-link" id="toDoList" href="{{ url_for('views.to_do_list') }}">
                 <i class="fa fa-list"></i> To-Do List
             </a>
+            <a class="nav-item nav-link" id="sleepLog" href="{{ url_for('views.log_sleep') }}">
+                <i class="fa fa-bed"></i> Sleep Log
+            </a>
             {% if user.is_authenticated %}
                 <a class="nav-item nav-link" id="profile" href="{{ url_for('views.profile') }}">
                     <i class="fa fa-user-circle"></i>
@@ -110,7 +113,7 @@
     </div>
 </nav>
 
-<!-- Flash Messages -->
+
 <div class="container mt-3">
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -126,13 +129,11 @@
     {% endwith %}
 </div>
 
-<!-- Main Content -->
 <div class="container">
     {% block content %}
     {% endblock %}
 </div>
 
-<!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" crossorigin="anonymous"></script>
