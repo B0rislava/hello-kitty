@@ -78,3 +78,7 @@ def update_note(note_id):
 @views.route('/meditation')
 def meditation():
     return render_template("meditation.html", user=current_user)
+
+@views.route('/articles')
+def articles():
+    return render_template('articles.html', user=current_user)
