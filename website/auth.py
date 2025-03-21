@@ -68,3 +68,17 @@ def sign_up():
             return redirect(url_for('views.home'))
 
     return render_template("sign_up.html", user=current_user)
+
+@auth.route('/delete_profile', methods=['POST'])
+@login_required
+def delete_profile():
+    try:
+        # Delete the current user's profile
+        user = User.query.get(current_user.id)
+        db.session.delete(user)
+        db.session.commit()
+        flash('Your profile has been deleted successfully.', 'success')
+        return redirect(url_for('auth.login'))
+    except Exception as e:
+        flash('An error occurred while deleting your profile.', 'danger')
+        return redirect(url_for('views.profile'))
