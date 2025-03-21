@@ -45,47 +45,47 @@
     <!-- Middle Section (Character and Personality Diagram) -->
     <div class="d-flex flex-column align-items-center" style="width: 300px; position: relative;">
         <!-- Character Sprite -->
-        <div class="position-relative mb-4">
-            <img id="character" src="{{ url_for('static', filename='images/default_sprite.png') }}" alt="Character"
-                 class="img-fluid" style="width: 220px; height: 220px;">
-            <!-- Default Mouth (non-customizable) -->
-            <img id="mouth" src="{{ url_for('static', filename='images/mouth_' + (session.get('mood', 'happy')) + '.png') }}"
-                 class="position-absolute start-50 translate-middle-x" style="top: 0px; left: 50%; width: 100%; height: 100%; transform: translateX(-50%);">
+<div class="position-relative mb-4" style="top: 50px;">
+    <img id="character" src="{{ url_for('static', filename='images/default_sprite.png') }}" alt="Character"
+         class="img-fluid" style="width: 220px; height: 220px;">
+    <!-- Default Mouth (non-customizable) -->
+    <img id="mouth" src="{{ url_for('static', filename='images/mouth_' + (session.get('mood', 'happy')) + '.png') }}"
+         class="position-absolute start-50 translate-middle-x" style="top: 0px; left: 50%; width: 100%; height: 100%; transform: translateX(-50%);">
 
-            <img id="accessory" src="{{ url_for('static', filename='images/' + (session.get('accessory', '') or '')) }}"
-                 class="position-absolute start-50 translate-middle-x" style="top: 0px; width: 100%; height: auto; display: {{ 'block' if session.get('accessory') else 'none' }};">
-        </div>
+    <img id="accessory" src="{{ url_for('static', filename='images/' + (session.get('accessory', '') or '')) }}"
+         class="position-absolute start-50 translate-middle-x" style="top: 0px; width: 100%; height: auto; display: {{ 'block' if session.get('accessory') else 'none' }};">
+</div>
 
-        <!-- Personality Traits (Chart) -->
-        <div class="card" style="width: 100%; background-color: #f5fff7; border-radius: 15px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-            <div class="card-body">
-                <h5 class="text-center" style="font-weight: bold; color: #495057;">Personality Traits</h5>
 
-                <!-- Personality Diagram -->
-                <div class="d-flex justify-content-between mb-3">
-                    <div style="width: 20%; text-align: center;">
-                        <label style="font-weight: bold; color: #6fb6b6;">Introvert</label>
-                        <input type="range" value="{{ introvert }}" min="1" max="5" disabled style="width: 70%; margin: 0 auto;">
-                        <p class="text-center" style="font-size: 14px; color: #495057;">{{ introvert }}</p>
-                    </div>
-                    <div style="width: 20%; text-align: center;">
-                        <label style="font-weight: bold; color: #6fb6b6;">Analytical</label>
-                        <input type="range" value="{{ analytical }}" min="1" max="5" disabled style="width: 70%; margin: 0 auto;">
-                        <p class="text-center" style="font-size: 14px; color: #495057;">{{ analytical }}</p>
-                    </div>
-                    <div style="width: 20%; text-align: center;">
-                        <label style="font-weight: bold; color: #6fb6b6;">Loyal</label>
-                        <input type="range" value="{{ loyal }}" min="1" max="5" disabled style="width: 70%; margin: 0 auto;">
-                        <p class="text-center" style="font-size: 14px; color: #495057;">{{ loyal }}</p>
-                    </div>
-                    <div style="width: 20%; text-align: center;">
-                        <label style="font-weight: bold; color: #6fb6b6;">Passive</label>
-                        <input type="range" value="{{ passive }}" min="1" max="5" disabled style="width: 70%; margin: 0 auto;">
-                        <p class="text-center" style="font-size: 14px; color: #495057;">{{ passive }}</p>
-                    </div>
-                </div>
+       <!-- Personality Traits (Chart) -->
+<div class="card" style="width: 130%; background-color: #f5fff7; border-radius: 15px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); margin-top: 110px;">
+    <div class="card-body">
+        <h5 class="text-center" style="font-weight: bold; color: #495057;">Personality Traits</h5>
+        <div class="d-flex justify-content-between mb-3">
+            <div style="width: 20%; text-align: center;">
+                <label style="font-weight: bold; color: #6fb6b6;">Introvert</label>
+                <input type="range" value="{{ introvert }}" min="1" max="5" disabled style="width: 70%; margin: 0 auto;">
+                <p class="text-center" style="font-size: 14px; color: #495057;">{{ introvert }}</p>
+            </div>
+            <div style="width: 20%; text-align: center;">
+                <label style="font-weight: bold; color: #6fb6b6;">Analytical</label>
+                <input type="range" value="{{ analytical }}" min="1" max="5" disabled style="width: 70%; margin: 0 auto;">
+                <p class="text-center" style="font-size: 14px; color: #495057;">{{ analytical }}</p>
+            </div>
+            <div style="width: 20%; text-align: center;">
+                <label style="font-weight: bold; color: #6fb6b6;">Loyal</label>
+                <input type="range" value="{{ loyal }}" min="1" max="5" disabled style="width: 70%; margin: 0 auto;">
+                <p class="text-center" style="font-size: 14px; color: #495057;">{{ loyal }}</p>
+            </div>
+            <div style="width: 20%; text-align: center;">
+                <label style="font-weight: bold; color: #6fb6b6;">Passive</label>
+                <input type="range" value="{{ passive }}" min="1" max="5" disabled style="width: 70%; margin: 0 auto;">
+                <p class="text-center" style="font-size: 14px; color: #495057;">{{ passive }}</p>
             </div>
         </div>
+    </div>
+</div>
+
     </div>
 
     <!-- Right Sidebar with Customization (Tamagotchi and Accessories) -->
