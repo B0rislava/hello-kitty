@@ -23,12 +23,42 @@ def home():
 @views.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
+    # Ако е изпратена форма за анкета (POST заявка)
     if request.method == 'POST':
+        # Получаваме отговорите от анкетата
+        introvert_score = int(request.form.get('introvert', 3))  # Стойността на "Introvert" с default стойност 3
+        analytical_score = int(request.form.get('analytical', 3))
+        loyal_score = int(request.form.get('loyal', 3))
+        passive_score = int(request.form.get('passive', 3))
+
+        # Записваме тези стойности в сесията
+        session['introvert'] = introvert_score
+        session['analytical'] = analytical_score
+        session['loyal'] = loyal_score
+        session['passive'] = passive_score
+
+        # Ако има аксесоар в сесията (независимо от анкетата), записваме и това
         accessory = request.form.get('accessory')
         session['accessory'] = accessory
+
+        # Пренасочване обратно към профила (за да се обновят данните)
         return redirect(url_for('views.profile'))
 
-    return render_template("profile.html", user=current_user)
+    # Извличаме стойностите от сесията, ако ги има
+    introvert = session.get('introvert', 3)
+    analytical = session.get('analytical', 3)
+    loyal = session.get('loyal', 3)
+    passive = session.get('passive', 3)
+    accessory = session.get('accessory', '')
+
+    # Показваме профила на потребителя и добавяме тези стойности към шаблона
+    return render_template("profile.html",
+                           user=current_user,
+                           introvert=introvert,
+                           analytical=analytical,
+                           loyal=loyal,
+                           passive=passive,
+                           accessory=accessory)
 
 
 

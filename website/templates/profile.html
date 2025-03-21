@@ -33,7 +33,7 @@
                 <!-- Delete Profile Section -->
                 <div class="mt-4 text-center">
                     <form method="POST" action="{{ url_for('auth.delete_profile') }}">
-                        <button type="submit" class="btn btn-danger" style="border-radius: 20px;" onclick="return confirm('Are you sure you want to delete your profile? This action cannot be undone.')">
+                        <button type="submit" class="btn btn-danger" style="border-radius: 20px; top: 10px;" onclick="return confirm('Are you sure you want to delete your profile? This action cannot be undone.')">
                             <i class="fa fa-trash"></i> Delete Profile
                         </button>
                     </form>
@@ -56,6 +56,10 @@
                  class="position-absolute start-50 translate-middle-x" style="top: 0px; width: 100%; height: auto; display: {{ 'block' if session.get('accessory') else 'none' }};">
         </div>
     </div>
+
+
+
+
 
     <!-- Right Sidebar with Customization (Tamagotchi and Accessories) -->
     <div class="d-flex flex-column align-items-center" style="width: 300px;">
@@ -102,6 +106,41 @@
         </div>
     </div>
 </div>
+
+
+
+     <!-- Personality Traits (Chart) -->
+    <div class="d-flex justify-content-center align-items-center mt-5">
+        <div class="card" style="width: 50%; background-color: #f5fff7; border-radius: 15px;">
+            <div class="card-body">
+                <h5 class="text-center">Personality Traits</h5>
+
+                <!-- Personality Diagram -->
+                <div class="d-flex justify-content-between mb-3">
+                    <div style="width: 10%;">
+                        <label>Introvert</label>
+                        <input type="range" value="{{ introvert }}" min="1" max="5" disabled>
+                        <p class="text-center">{{ introvert }}</p>
+                    </div>
+                    <div style="width: 10%;">
+                        <label>Analytical</label>
+                        <input type="range" value="{{ analytical }}" min="1" max="5" disabled>
+                        <p class="text-center">{{ analytical }}</p>
+                    </div>
+                    <div style="width: 10%;">
+                        <label>Loyal</label>
+                        <input type="range" value="{{ loyal }}" min="1" max="5" disabled>
+                        <p class="text-center">{{ loyal }}</p>
+                    </div>
+                    <div style="width: 10%;">
+                        <label>Passive</label>
+                        <input type="range" value="{{ passive }}" min="1" max="5" disabled>
+                        <p class="text-center">{{ passive }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 

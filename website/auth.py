@@ -60,14 +60,40 @@ def sign_up():
         elif len(password1) < 8 or not any(char.isdigit() for char in password1) or not any(char.isalpha() for char in password1):
             flash("Password must be at least 8 characters long, contain both letters and numbers.", category='error')
         else:
-            new_user = User(email = email, first_name = first_name, password =generate_password_hash(password1))
+            new_user = User(email=email, first_name=first_name, password=generate_password_hash(password1))
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember=True)
             flash("Account created!", category='success')
-            return redirect(url_for('views.home'))
+
+            # Пренасочваме към анкета за личността
+            return redirect(url_for('auth.survey'))
 
     return render_template("sign_up.html", user=current_user)
+
+
+@auth.route('/survey', methods=['GET', 'POST'])
+@login_required
+def survey():
+    if request.method == 'POST':
+        # Вземаме отговорите от формата
+        introvert_score = int(request.form['introvert'])
+        analytical_score = int(request.form['analytical'])
+        loyal_score = int(request.form['loyal'])
+        passive_score = int(request.form['passive'])
+
+        # Записваме резултатите в потребителския профил
+        user = current_user
+        user.introvert = introvert_score
+        user.analytical = analytical_score
+        user.loyal = loyal_score
+        user.passive = passive_score
+        db.session.commit()
+
+        # Пренасочваме към профила
+        return redirect(url_for('views.profile'))
+
+    return render_template('survey.html')
 
 @auth.route('/delete_profile', methods=['POST'])
 @login_required
