@@ -1,18 +1,25 @@
 {% extends "base.html" %}
+
 {% block title %}Meditation Timer{% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="row justify-content-center my-5">
-        <!-- Timer Section -->
         <div class="col-md-6">
             <div class="card shadow-lg rounded-lg" style="background: #ffffff; border-radius: 20px;">
                 <div class="card-body">
                     <h2 class="card-title text-center mb-4" style="color: #2a9d8f; font-family: 'Lora', serif;">Set Your Meditation Timer</h2>
-                    <form id="timer-form" class="mt-4">
+                    
+                    <form method="POST" class="mt-4">
                         <label for="duration" class="form-label" style="font-size: 1.1rem; color: #264653;">Choose duration (in minutes):</label>
                         <input type="number" id="duration" name="duration" min="1" max="60" class="form-control form-control-lg" style="border-radius: 12px; padding: 10px;" required>
-                        <button type="button" id="start-button" class="btn btn-primary mt-4 w-100" style="border-radius: 20px; padding: 12px 20px; font-size: 1.1rem; background: #2a9d8f; border: none;">Start Timer</button>
+                        
+                        <!-- Hidden field to track whether meditation is completed or not -->
+                        <input type="hidden" id="completed" name="completed" value="false">
+                        
+                        <button type="submit" id="start-button" class="btn btn-primary mt-4 w-100" style="border-radius: 20px; padding: 12px 20px; font-size: 1.1rem; background: #2a9d8f; border: none;">Start Meditation</button>
                     </form>
+
                     <div id="timer-display" class="mt-4 text-center" style="display: none;">
                         <h3 style="font-size: 1.4rem; color: #264653;">Time Remaining:</h3>
                         <div id="time-remaining" class="display-4" style="color: #e76f51;">00:00</div>
@@ -24,7 +31,6 @@
     </div>
 
     <div class="row justify-content-center">
-        <!-- Benefits Section -->
         <div class="col-md-8">
             <div class="card shadow-lg rounded-lg" style="background: #ffffff;">
                 <div class="card-body">
@@ -52,7 +58,8 @@
 <script>
     let timerInterval;
 
-    document.getElementById('start-button').addEventListener('click', function () {
+    document.getElementById('start-button').addEventListener('click', function (event) {
+        event.preventDefault();
         const durationInput = document.getElementById('duration');
         const duration = parseInt(durationInput.value);
 
@@ -61,24 +68,44 @@
             return;
         }
 
-        document.getElementById('timer-form').style.display = 'none';
+        document.querySelector('form').style.display = 'none';
         document.getElementById('timer-display').style.display = 'block';
 
         const timeRemainingElement = document.getElementById('time-remaining');
         let timeRemaining = duration * 60; 
 
-        timerInterval = setInterval(() => {
+        const updateTimer = () => {
             const minutes = Math.floor(timeRemaining / 60);
             const seconds = timeRemaining % 60;
             timeRemainingElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        };
 
-            if (timeRemaining <= 0) {
+        updateTimer();
+
+        timerInterval = setInterval(() => {
+            if (timeRemaining > 0) {
+                timeRemaining--;
+                updateTimer();
+            } else {
                 clearInterval(timerInterval);
                 alert('Meditation session complete!');
-                location.reload(); 
-            }
 
-            timeRemaining--;
+                fetch('/meditation-completed', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: 'Meditation completed'
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data.message);
+                    location.reload();
+                })
+                .catch(error => console.error('Error:', error));
+            }
         }, 1000);
     });
 
@@ -91,4 +118,5 @@
         }
     });
 </script>
+
 {% endblock %}

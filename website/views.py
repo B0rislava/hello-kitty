@@ -1,9 +1,10 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, flash
+from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
-from .models import Note
+from .models import Note, DailyChallenges, SleepTime
 from . import db
-from datetime import datetime, timedelta
+from datetime import datetime
 from .streak_counter import update_streak
+from .sleeptime import get_sleep_duration
 
 views = Blueprint('views', __name__)
 
@@ -34,6 +35,8 @@ def redirect_to_profile():
 @login_required
 def to_do_list():
     update_streak(current_user)
+
+    new_note = Note(data="Meditation completed", user_id=current_user.id, completed=True)
 
     if request.method == 'POST':
         note_data = request.form.get('note')
@@ -74,7 +77,52 @@ def update_note(note_id):
     else:
         flash('Task not found or unauthorized action.', category='error')
     return redirect(url_for('views.to_do_list'))
-  
-@views.route('/meditation')
+
+@views.route('/meditation', methods=['GET', 'POST'])
+@login_required
 def meditation():
     return render_template("meditation.html", user=current_user)
+
+@views.route('/sleep/log', methods=['POST', 'GET'])
+def log_sleep():
+    if request.method == 'POST':
+        sleeptime_from = request.form.get('sleeptime_from')
+        sleeptime_to = request.form.get('sleeptime_to')
+
+        if not sleeptime_from or not sleeptime_to:
+            flash('Please fill in both the start and end time for your sleep.', 'warning')
+            return redirect(url_for('views.log_sleep'))
+
+        try:
+            sleeptime_from = datetime.strptime(sleeptime_from, '%Y-%m-%dT%H:%M')
+            sleeptime_to = datetime.strptime(sleeptime_to, '%Y-%m-%dT%H:%M')
+        except ValueError:
+            flash('Invalid date format. Please make sure you select valid date and time.', 'danger')
+            return redirect(url_for('views.log_sleep'))
+
+        if sleeptime_from >= sleeptime_to:
+            flash('Sleep start time cannot be later than or the same as the end time.', 'danger')
+            return redirect(url_for('views.log_sleep'))
+
+        new_sleep = SleepTime(user_id=current_user.id, sleeptime_from=sleeptime_from, sleeptime_to=sleeptime_to)
+
+        try:
+            db.session.add(new_sleep)
+            db.session.commit()
+            flash('Sleep time logged successfully!', 'success')
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error occurred while logging sleep: {e}', 'danger')
+
+        return redirect(url_for('views.log_sleep'))
+
+    return render_template('sleep.html', user=current_user)
+
+@views.route('/sleep/delete/<int:sleep_id>', methods=['POST'])
+def delete_sleep(sleep_id):
+    sleep_entry = SleepTime.query.get(sleep_id)
+    if sleep_entry:
+        db.session.delete(sleep_entry)
+        db.session.commit()
+    return redirect(url_for('views.sleep'))
+
