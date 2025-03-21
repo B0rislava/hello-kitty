@@ -1,75 +1,141 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-        crossorigin="anonymous"
-    />
-    <link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-        crossorigin="anonymous"
-    />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Home{% endblock %}</title>
+
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='background1.png') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+    </style>
+
+
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" 
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" 
+        crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" 
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" 
+        crossorigin="anonymous">
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #e7f2f2, #e2d4f2); /* Soft pastel gradient with depth */
+            font-family: 'Lora', serif;
+        }
+        .navbar {
+            background: #6fb6b6; /* Rich soft mint color */
+            padding: 12px 25px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Added shadow for depth */
+        }
+        .navbar-nav .nav-link {
+            font-size: 1.3rem; /* Slightly larger font size */
+            color: #505050 !important; /* Slightly darker gray for a balanced look */
+            transition: all 0.3s ease;
+            padding: 8px 15px;
+            border-radius: 10px;
+        }
+        .navbar-nav .nav-link:hover {
+            background: #ffd3a5; /* Peachy orange hover effect for a warm touch */
+            color: #ffffff !important;
+        }
+        .navbar-nav .nav-link.btn-custom {
+            font-weight: 500;
+            border-radius: 25px;
+            padding: 10px 20px;
+        }
+        .navbar-nav .nav-link.btn-custom:hover {
+            opacity: 0.85;
+        }
+        .navbar-nav {
+            margin-left: auto;
+        }
+        .container {
+            margin-top: 30px;
+            max-width: 900px;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .alert {
+            border-radius: 10px;
+        }
+    </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light mx-3 mt-3">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-        <div class="navbar-nav">
-            <a class="nav-item nav-link" id="home" href="{{ url_for('views.home') }}">Home</a>
-            <a class="nav-item nav-link" id="meditation" href="{{ url_for('views.meditation') }}">Meditation</a> <!-- Added Meditation Link -->
+        <!-- Home Link on the Left -->
+        <a class="nav-item nav-link" id="home" href="{{ url_for('views.home') }}" style="color: #5d6063; border-radius: 10px; padding: 8px 15px;">
+            <i class="fa fa-home"></i> Home
+        </a>
 
+        <div class="navbar-nav ml-auto">
+            <a class="nav-item nav-link" id="meditation" href="{{ url_for('views.meditation') }}">
+                <i class="fa fa-heart"></i> Meditation
+            </a>
+            <a class="nav-item nav-link" id="toDoList" href="{{ url_for('views.to_do_list') }}">
+                <i class="fa fa-list"></i> To-Do List
+            </a>
             {% if user.is_authenticated %}
-                <a class="nav-item nav-link" id="profile" href="{{ url_for('views.profile') }}">Profile</a>
-                <a class="nav-item nav-link" id="logout" href="{{ url_for('auth.logout') }}">Log out</a>
+                <a class="nav-item nav-link" id="profile" href="{{ url_for('views.profile') }}">
+                    <i class="fa fa-user-circle"></i>
+                </a>
+                <a class="nav-item nav-link btn btn-outline-danger text-danger btn-custom ml-2" id="logout" href="{{ url_for('auth.logout') }}">
+                    <i class="fa fa-sign-out"></i> Log out
+                </a>
             {% else %}
-                <a class="nav-item nav-link" id="profile" href="{{ url_for('views.redirect_to_profile') }}">Profile</a>
-                <a class="nav-item nav-link" id="login" href="{{ url_for('auth.login') }}">Login</a>
-                <a class="nav-item nav-link" id="signUp" href="{{ url_for('auth.sign_up') }}">Sign Up</a>
+                <a class="nav-item nav-link btn btn-outline-primary text-primary btn-custom ml-2" id="login" href="{{ url_for('auth.login') }}">
+                    <i class="fa fa-sign-in"></i> Login
+                </a>
+                <a class="nav-item nav-link btn btn-outline-success text-success btn-custom ml-2" id="signUp" href="{{ url_for('auth.sign_up') }}">
+                    <i class="fa fa-user-plus"></i> Sign Up
+                </a>
             {% endif %}
         </div>
     </div>
 </nav>
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-{% if messages %}
-    {% for category, message in messages %}
-        <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissable fade show" role="alert">
-            {{ message }}
-            <button type="button" class="close" data-dismiss="alert">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    {% endfor %}
-{% endif %}
-{% endwith %}
+<!-- Flash Messages -->
+<div class="container mt-3">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show" role="alert">
+                    <i class="fa fa-info-circle"></i> {{ message }}
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span>&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
 
+<!-- Main Content -->
 <div class="container">
     {% block content %}
     {% endblock %}
 </div>
 
-<script
-    src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"
-></script>
-<script
-    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-    integrity="sha384-ApNbgh9Q5I3ZTlFfrp4T6FkwlUj9VxFc+OGpL5f5r5E2YgVqJFT1V3YF92Bf6F8T"
-    crossorigin="anonymous"
-></script>
-<script
-    src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"
-></script>
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
 </body>
 </html>

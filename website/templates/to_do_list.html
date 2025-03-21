@@ -3,44 +3,51 @@
 {% block title %}To-Do List{% endblock %}
 
 {% block content %}
-<h1 align="center">To Do List</h1>
+<h1 class="text-center my-4" style="color: #6c757d; font-family: 'Lora', serif;">To-Do List</h1>
 
-<div class="alert alert-info text-center" role="alert">
+<div class="alert alert-info text-center shadow-sm" role="alert" style="font-family: 'Poppins', sans-serif;">
     Current Streak: <strong>{{ user.streak_record }}</strong> days
 </div>
 
-<ul class="list-group" id="to-do-list">
-    {% for note in user.notes %}
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-        <div class="form-check">
-            <form method="POST" action="{{ url_for('views.update_note', note_id=note.id) }}" style="display: inline;">
-                <input class="form-check-input" type="checkbox" id="note-{{ note.id }}" {% if note.completed %}checked disabled{% endif %}
-                       onchange="this.form.submit()"> 
-                <label class="form-check-label" for="note-{{ note.id }}">
-                    {% if note.completed %}
-                    <s>{{ note.data }}</s> 
-                    {% else %}
-                    {{ note.data }}
-                    {% endif %}
-                </label>
-            </form>
-        </div>
-        <div>
-            <form method="POST" action="{{ url_for('views.delete_note', note_id=note.id) }}" style="display: inline;">
-                <button type="submit" class="btn btn-light text-danger border border-danger">Delete</button>
-            </form>
-        </div>
-    </li>
-    {% endfor %}
-</ul>
+<div class="card shadow-lg" style="border-radius: 15px; background: #f9f9f9;">
+    <div class="card-body">
+        <h5 class="card-title text-center" style="color: #5a6268; font-family: 'Lora', serif;">Your Tasks</h5>
+        <ul class="list-group" id="to-do-list" style="font-family: 'Poppins', sans-serif;">
+            {% for note in user.notes %}
+            <li class="list-group-item d-flex justify-content-between align-items-center" style="border-radius: 10px; background: #ffffff; box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); margin-bottom: 10px;">
+                <div class="form-check">
+                    <form method="POST" action="{{ url_for('views.update_note', note_id=note.id) }}" style="display: inline;">
+                        <input class="form-check-input" type="checkbox" id="note-{{ note.id }}" {% if note.completed %}checked disabled{% endif %}
+                               onchange="this.form.submit()"> 
+                        <label class="form-check-label" for="note-{{ note.id }}" style="font-size: 1rem; color: #495057;">
+                            {% if note.completed %}
+                            <s>{{ note.data }}</s> 
+                            {% else %}
+                            {{ note.data }}
+                            {% endif %}
+                        </label>
+                    </form>
+                </div>
+                <div>
+                    <form method="POST" action="{{ url_for('views.delete_note', note_id=note.id) }}" style="display: inline;">
+                        <button type="submit" class="btn btn-sm" style="border-radius: 20px; background: #6fb6b6; color: #ffffff;">Delete</button>;">Delete</button>
+                    </form>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 
-<form method="POST">
-  <textarea name="note" id="note" class="form-control" placeholder="Write your task here..."></textarea>
-  <div align="center" style="margin-top: 10px;">
-    <button type="submit" class="btn btn-light text-danger border border-danger">Add Task</button>
-  </div>
-</form>
-
-<a class="nav-item nav-link" id="toDoList" href="/to-do-list">To Do List</a>
-
+<div class="card shadow-lg mt-4" style="border-radius: 15px; background: #f9f9f9;">
+    <div class="card-body">
+        <h5 class="card-title text-center" style="color: #5a6268; font-family: 'Lora', serif;">Add a New Task</h5>
+        <form method="POST">
+            <textarea name="note" id="note" class="form-control mb-3" placeholder="Write your task here..." rows="3" style="border-radius: 10px; background: #ffffff; box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);"></textarea>
+            <div class="text-center">
+                <button type="submit" class="btn w-100" style="border-radius: 20px; background: #6fb6b6; color: #ffffff; font-family: 'Poppins', sans-serif;">Add Task</button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}

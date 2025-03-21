@@ -2,8 +2,8 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<h1 class="text-center">Home</h1>
-
+<div class="container mt-5">
+    <div class="text-center">
 <div class="position-absolute" style="top: 100px; left: 25px;">
     <a href="{{ url_for('views.profile') }}" class="text-decoration-none text-dark font-weight-bold">
         {{ user.first_name }}
