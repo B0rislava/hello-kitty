@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash
 from . import db
 from datetime import datetime
 from .streak_counter import update_streak
+from .sleeptime import get_sleep_duration
 
 views = Blueprint('views', __name__)
 
@@ -125,37 +126,14 @@ def meditation():
 @views.route('/sleep/log', methods=['POST', 'GET'])
 def log_sleep():
     if request.method == 'POST':
-        sleeptime_from = request.form.get('sleeptime_from')
-        sleeptime_to = request.form.get('sleeptime_to')
+        
+        sleep_duration = get_sleep_duration(current_user.id)
+        session['sleep_duration'] = sleep_duration 
+        
+        flash('Sleep logged successfully!', 'success')
+        return redirect(url_for('views.home')) 
 
-        if not sleeptime_from or not sleeptime_to:
-            flash('Please fill in both the start and end time for your sleep.', 'warning')
-            return redirect(url_for('views.log_sleep'))
-
-        try:
-            sleeptime_from = datetime.strptime(sleeptime_from, '%Y-%m-%dT%H:%M')
-            sleeptime_to = datetime.strptime(sleeptime_to, '%Y-%m-%dT%H:%M')
-        except ValueError:
-            flash('Invalid date format. Please make sure you select valid date and time.', 'danger')
-            return redirect(url_for('views.log_sleep'))
-
-        if sleeptime_from >= sleeptime_to:
-            flash('Sleep start time cannot be later than or the same as the end time.', 'danger')
-            return redirect(url_for('views.log_sleep'))
-
-        new_sleep = SleepTime(user_id=current_user.id, sleeptime_from=sleeptime_from, sleeptime_to=sleeptime_to)
-
-        try:
-            db.session.add(new_sleep)
-            db.session.commit()
-            flash('Sleep time logged successfully!', 'success')
-        except Exception as e:
-            db.session.rollback()
-            flash(f'Error occurred while logging sleep: {e}', 'danger')
-
-        return redirect(url_for('views.log_sleep'))
-
-    return render_template('sleep.html', user=current_user)
+    return render_template('sleep.html')
 
 @views.route('/sleep/delete/<int:sleep_id>', methods=['POST'])
 def delete_sleep(sleep_id):
@@ -213,7 +191,7 @@ def update_accessory():
 @views.route('/update_mood', methods=['POST'])
 def update_mood():
     data = request.get_json()
-    mood = data.get('mood', 'happy')  # Default mood is 'happy'
+    mood = data.get('mood', 'happy') 
     session['mood'] = mood
     return jsonify({'mood': mood})
 
