@@ -85,19 +85,16 @@
             <i class="fa fa-home"></i> Home
         </a>
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <!-- Other Buttons on the Right -->
-            <div class="navbar-nav ml-auto">
-                <a class="nav-item nav-link" id="meditation" href="{{ url_for('views.meditation') }}">
-                    <i class="fa-solid fa-yin-yang"></i> Meditation
-                </a>
-                <a class="nav-item nav-link" id="toDoList" href="{{ url_for('views.to_do_list') }}">
-                    <i class="fa fa-list"></i> To-Do List
-                </a>
+        <div class="navbar-nav ml-auto">
+            <a class="nav-item nav-link" id="meditation" href="{{ url_for('views.meditation') }}">
+                <i class="fa fa-heart"></i> Meditation
+            </a>
+            <a class="nav-item nav-link" id="toDoList" href="{{ url_for('views.to_do_list') }}">
+                <i class="fa fa-list"></i> To-Do List
+            </a>
+            <a class="nav-item nav-link" id="sleepLog" href="{{ url_for('views.log_sleep') }}">
+                <i class="fa fa-bed"></i> Sleep Log
+            </a>
                 <a class="nav-item nav-link" id="articles" href="{{ url_for('views.articles') }}">
                     <i class="fa fa-book"></i> Articles
                 </a>
@@ -121,7 +118,7 @@
     </div>
 </nav>
 
-<!-- Flash Messages -->
+
 <div class="container mt-3">
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -137,13 +134,11 @@
     {% endwith %}
 </div>
 
-<!-- Main Content -->
 <div class="container">
     {% block content %}
     {% endblock %}
 </div>
 
-<!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" crossorigin="anonymous"></script>
