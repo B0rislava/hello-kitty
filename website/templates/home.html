@@ -4,17 +4,21 @@
 {% block content %}
 <div class="container mt-5">
     <!-- Talisman Section -->
-    <div class="position-absolute" style="top: 350px; right: 80px;">
+    <div class="position-absolute" style="top: 260px; right: 260px; ">
         <div class="position-relative">
             <!-- Character -->
             <img id="character" src="{{ url_for('static', filename='images/default_sprite.png') }}" alt="Character"
-                 class="img-fluid" style="width: 100px; height: 100px;">
+                 class="img-fluid" style="width: 220px; height: 220px;">
+
+            <!-- Mood Image (dynamically set based on session) -->
+            <img id="mouth" src="{{ url_for('static', filename='images/mouth_' + (session.get('mood', 'happy')) + '.png') }}"
+                 class="position-absolute start-50 translate-middle-x" style="width: 220px; height: 220px;top: 0px; left: 110px;  transform: translateX(-50%);">
 
             <!-- Accessory Image (if available) -->
             {% if session.get('accessory') %}
                 <img id="accessory" src="{{ url_for('static', filename='images/' + session['accessory']) }}"
                      class="position-absolute start-50 translate-middle-x"
-                     style="top: 0px; left: 0px; width: 100px; height: 100px;">
+                     style="top: 10 0px; left: 0px; width: 220px; height: 220px;">
             {% endif %}
         </div>
     </div>
@@ -22,7 +26,7 @@
     <!-- Greeting Section -->
     <div class="text-center">
         <h2 id="greeting-text" class="mb-3" style="font-family: 'Lora', serif; color: #495057;"></h2>
-        
+
         <script>
             function getGreeting() {
                 let now = new Date();
@@ -43,8 +47,9 @@
     </div>
 
     <!-- Daily Affirmation Section -->
-    <div class="mt-4 text-center">
-        <h4 id="affirmation-text" style="color: #6fb6b6; font-family: 'Lora', serif;"></h4>
+    <div class="mt-5 text-center">
+        <h4 style="color: #495057; font-family: 'Lora', serif;">Today's Affirmation</h4>
+        <p id="affirmation-text" class="mt-4" style="color: #6fb6b6; font-family: 'Lora', serif;"></p>
     </div>
 
     <script>
@@ -73,28 +78,11 @@
             <button class="btn btn-outline-primary mx-2 mood-btn" data-mood="sad" style="font-family: 'Lora', serif;">Sad 😢</button>
             <button class="btn btn-outline-warning mx-2 mood-btn" data-mood="stressed" style="font-family: 'Lora', serif;">Stressed 😟</button>
             <button class="btn btn-outline-info mx-2 mood-btn" data-mood="motivated" style="font-family: 'Lora', serif;">Motivated 💪</button>
-            <button class="btn btn-outline-secondary mx-2 mood-btn" data-mood="tired" style="font-family: 'Lora', serif;">Tired 😴</button>
+            <button class="btn btn-outline-secondary mx-2 mood-btn" data-mood="neutral" style="font-family: 'Lora', serif;">Neutral 😴</button>
         </div>
         <p id="mood-suggestion" class="mt-4" style="color: #6fb6b6; font-family: 'Lora', serif;"></p>
     </div>
-
-    <script>
-        document.querySelectorAll(".mood-btn").forEach(button => {
-            button.addEventListener("click", function () {
-                const mood = this.getAttribute("data-mood");
-                const suggestions = {
-                    happy: "That's wonderful! Keep spreading positivity and enjoy your day! 🌟",
-                    sad: "It's okay to feel sad sometimes. Take a deep breath and do something you love. 💖",
-                    stressed: "Try some deep breathing or a short walk to clear your mind. You've got this! 🌿",
-                    motivated: "Amazing! Channel that energy into achieving your goals today! 🚀",
-                    tired: "Rest is important. Take a break and recharge your energy. 🌙"
-                };
-                document.getElementById("mood-suggestion").innerText = suggestions[mood];
-            });
-        });
-    </script>
-
-    <!-- Fun Fact Section -->
+<!--FUN FACT SECTION -->
     <div class="mt-5 text-center">
         <h4 style="color: #495057; font-family: 'Lora', serif;">Did You Know?</h4>
         <p id="fun-fact" style="color: #6fb6b6; font-family: 'Lora', serif;"></p>
@@ -113,6 +101,37 @@
             document.getElementById("fun-fact").innerText = facts[randomIndex];
         }
         getFunFact();
+    </script>
+    <script>
+        document.querySelectorAll(".mood-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                const mood = this.getAttribute("data-mood");
+                const suggestions = {
+                    happy: "That's wonderful! Keep spreading positivity and enjoy your day! 🌟",
+                    sad: "It's okay to feel sad sometimes. Take a deep breath and do something you love. 💖",
+                    stressed: "Try some deep breathing or a short walk to clear your mind. You've got this! 🌿",
+                    motivated: "Amazing! Channel that energy into achieving your goals today! 🚀",
+                    neutral: "Rest is important. Take a break and recharge your energy. 🌙"
+                };
+                document.getElementById("mood-suggestion").innerText = suggestions[mood];
+
+                // Save the selected mood in session
+                fetch("/update_mood", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ mood: mood })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Update mouth image dynamically based on the selected mood
+                    let mouthImage = document.getElementById('mouth');
+                    mouthImage.src = "{{ url_for('static', filename='images/mouth_') }}" + data.mood + ".png";
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
     </script>
 </div>
 {% endblock %}

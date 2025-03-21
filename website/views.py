@@ -121,7 +121,7 @@ def edit_profile():
 @views.route('/update_accessory', methods=['POST'])
 @login_required
 def update_accessory():
-    data = request.get_json()  
+    data = request.get_json()
     accessory = data.get('accessory')
 
     if accessory == 'none':
@@ -130,3 +130,11 @@ def update_accessory():
         session['accessory'] = accessory
 
     return jsonify({'accessory': session.get('accessory')})
+
+
+@views.route('/update_mood', methods=['POST'])
+def update_mood():
+    data = request.get_json()
+    mood = data.get('mood', 'happy')  # Default mood is 'happy'
+    session['mood'] = mood
+    return jsonify({'mood': mood})

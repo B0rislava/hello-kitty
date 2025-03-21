@@ -33,11 +33,15 @@
     </div>
 
     <!-- Right Sidebar with Customization (Tamagotchi and Accessories) -->
-    <div class="d-flex flex-column align-items-center ml-5" style="width: 300px;">
+    <div class="d-flex flex-column align-items-center ml-5" style="width: 300px; ">
         <!-- Character Sprite -->
         <div class="position-relative mb-4">
             <img id="character" src="{{ url_for('static', filename='images/default_sprite.png') }}" alt="Character"
                  class="img-fluid" style="width: 220px; height: 220px;">
+            <!-- Default Mouth (non-customizable) -->
+            <img id="mouth" src="{{ url_for('static', filename='images/mouth_' + (session.get('mood', 'happy')) + '.png') }}"
+                 class="position-absolute start-50 translate-middle-x" style="top: 0px; left: 50%; width: 100%; height: 100%; transform: translateX(-50%);">
+
             <img id="accessory" src="{{ url_for('static', filename='images/' + (session.get('accessory', '') or '')) }}"
                  class="position-absolute start-50 translate-middle-x" style="top: 0px; width: 100%; height: auto; display: {{ 'block' if session.get('accessory') else 'none' }};">
         </div>
@@ -107,7 +111,6 @@
             })
             .then(response => response.json())
             .then(data => {
-                // Обновяване на изображението на аксесоара в интерфейса
                 let accessoryImage = document.getElementById('accessory');
                 if (data.accessory) {
                     accessoryImage.src = "{{ url_for('static', filename='images/') }}" + data.accessory;
