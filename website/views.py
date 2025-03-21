@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, flash, session
-from flask_login import login_required, current_user
+from flask import Blueprint, render_template, request, flash, redirect, url_for, flash, session, jsonify
+from flask_login import login_required, current_user, logout_user
 from werkzeug.security import generate_password_hash
 
 from .models import Note
@@ -100,7 +100,6 @@ def edit_profile():
         new_email = request.form.get('email')
         new_password = request.form.get('password')
 
-        # Обновяване на името и имейла
         if new_name:
             current_user.first_name = new_name
         if new_email:
@@ -118,3 +117,19 @@ def edit_profile():
         return redirect(url_for('views.profile'))
 
     return render_template('edit_profile.html', user=current_user)
+
+
+@views.route('/update_accessory', methods=['POST'])
+@login_required
+def update_accessory():
+    data = request.get_json()
+    accessory = data.get('accessory')
+
+    session['accessory'] = accessory if accessory != 'none' else None
+
+    if accessory:
+        accessory_url = url_for('static', filename=f'images/{accessory}')
+    else:
+        accessory_url = None
+
+    return jsonify({'accessory_url': accessory_url})

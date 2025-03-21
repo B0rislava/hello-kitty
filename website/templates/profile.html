@@ -4,7 +4,7 @@
 {% block content %}
 <div class="d-flex justify-content-center align-items-start">
     <!-- Main Profile Block -->
-    <div class="card" style="width: 350px; height: 900px; border-radius: 25px; overflow: hidden; background-color: #def5ff; margin-left: -200px;">
+    <div class="card" style="width: 350px; height: 500px; border-radius: 25px; overflow: hidden; background-color: #def5ff; margin-left: -200px;">
         <div class="card-body p-5">
             <div class="text-center">
                 <!-- Profile Picture -->
@@ -28,6 +28,9 @@
                         <i class="fa fa-sign-out"></i> Log Out
                     </a>
                 </div>
+
+                <div class="mt-3 text-center">
+</div>
             </div>
         </div>
     </div>
@@ -43,19 +46,19 @@
         </div>
 
         <!-- Customization Menu -->
-        <div class="card" style="width: 100%; background-color: #f5fff7; border-radius: 15px; ">
+        <div class="card" style="width: 100%; background-color: #f5fff7; border-radius: 15px;">
             <div class="card-header" style="background-color: #6fb6b6; color: #fff; border-radius: 15px 15px 0 0;">
                 <h5>Customize Your Character</h5>
             </div>
             <div class="card-body">
-                <form method="POST">
+                <form id="customizationForm">
                     <!-- Hair Accessories -->
                     <h6>Hair Accessories</h6>
                     <div class="d-flex mb-3">
-                        <button class="accessory-btn btn btn-light border mx-1" name="accessory" value="hairpins.png">
+                        <button type="button" class="accessory-btn btn btn-light border mx-1" data-accessory="hairpins.png">
                             <img src="{{ url_for('static', filename='images/hairpins.png') }}" style="width: 40px; height: 40px;">
                         </button>
-                        <button class="accessory-btn btn btn-light border mx-1" name="accessory" value="bow.png">
+                        <button type="button" class="accessory-btn btn btn-light border mx-1" data-accessory="bow.png">
                             <img src="{{ url_for('static', filename='images/bow.png') }}" style="width: 40px; height: 40px;">
                         </button>
                     </div>
@@ -63,7 +66,7 @@
                     <!-- Clothes -->
                     <h6>Clothes</h6>
                     <div class="d-flex mb-3">
-                        <button class="accessory-btn btn btn-light border mx-1" name="accessory" value="dress.png">
+                        <button type="button" class="accessory-btn btn btn-light border mx-1" data-accessory="dress.png">
                             <img src="{{ url_for('static', filename='images/dress.png') }}" style="width: 40px; height: 40px;">
                         </button>
                     </div>
@@ -71,13 +74,13 @@
                     <!-- Jewelry -->
                     <h6>Jewelry</h6>
                     <div class="d-flex mb-3">
-                        <button class="accessory-btn btn btn-light border mx-1" name="accessory" value="necklace.png">
+                        <button type="button" class="accessory-btn btn btn-light border mx-1" data-accessory="necklace.png">
                             <img src="{{ url_for('static', filename='images/necklace.png') }}" style="width: 40px; height: 40px;">
                         </button>
                     </div>
 
                     <!-- Clear Accessory -->
-                    <button class="accessory-btn btn btn-light border mx-1" name="accessory" value="none">
+                    <button type="button" class="accessory-btn btn btn-light border mx-1" data-accessory="none">
                         ❌ Clear Accessory
                     </button>
                 </form>
@@ -85,5 +88,27 @@
         </div>
     </div>
 </div>
+<script>
+    document.querySelectorAll('.accessory-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            var accessory = this.getAttribute('data-accessory');
+
+            fetch("{{ url_for('views.update_accessory') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({ accessory: accessory })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('accessory').src = data.accessory_url;
+                document.getElementById('accessory').style.display = data.accessory_url ? 'block' : 'none';
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+</script>
 
 {% endblock %}
