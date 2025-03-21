@@ -27,6 +27,7 @@ def profile():
     if request.method == 'POST':
         accessory = request.form.get('accessory')
         session['accessory'] = accessory
+        return redirect(url_for('views.profile'))
 
     return render_template("profile.html", user=current_user)
 
@@ -34,8 +35,8 @@ def profile():
 
 @views.route('/redirect_to_profile')
 def redirect_to_profile():
-    flash("Sign in first!", "error") 
-    return redirect(url_for("auth.login"))  
+    flash("Sign in first!", "error")
+    return redirect(url_for("auth.login"))
 
 @views.route('/to-do-list', methods=['GET', 'POST'])
 @login_required
@@ -59,7 +60,7 @@ def to_do_list():
 @login_required
 def delete_note(note_id):
     note = Note.query.get(note_id)
-    if note and note.user_id == current_user.id:  
+    if note and note.user_id == current_user.id:
         db.session.delete(note)
         db.session.commit()
         flash('Note deleted!', category='success')
@@ -71,8 +72,8 @@ def delete_note(note_id):
 @login_required
 def update_note(note_id):
     note = Note.query.get(note_id)
-    if note and note.user_id == current_user.id: 
-        if not note.completed:  
+    if note and note.user_id == current_user.id:
+        if not note.completed:
             note.completed = True
             db.session.commit()
             flash('Task marked as completed!', category='success')
@@ -81,7 +82,7 @@ def update_note(note_id):
     else:
         flash('Task not found or unauthorized action.', category='error')
     return redirect(url_for('views.to_do_list'))
-  
+
 @views.route('/meditation')
 def meditation():
     return render_template("meditation.html", user=current_user)
