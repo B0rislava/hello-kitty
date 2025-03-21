@@ -87,11 +87,30 @@
 </head>
 <body>
     <div class="background"></div> <!-- Background split into two parts -->
-    <div class="welcome-container">
+
+    <!-- Welcome Container -->
+    <div class="welcome-container" style="position: relative; margin-top: 100px;">
+        <!-- Talisman Positioned on Top -->
+        <div class="talisman-container" style="position: absolute; top: -115px; left: 50%; transform: translateX(-50%);">
+            <div class="position-relative">
+                <!-- Character -->
+                <img id="character" src="{{ url_for('static', filename='images/default_sprite.png') }}" alt="Character"
+                     class="img-fluid" style="width: 120px; height: 120px;">
+
+                <!-- Accessory Image (if available) -->
+                {% if session.get('accessory') %}
+                    <img id="accessory" src="{{ url_for('static', filename='images/' + session['accessory']) }}"
+                         class="position-absolute start-50 translate-middle-x"
+                         style="top: 0px; left: 0px; width: 120px; height: 120px;">
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Welcome Text -->
         <h1 class="welcome-title mb-4">Welcome to Mentalko Web App</h1>
         <p class="welcome-description">
-            Explore features like task management, guided meditation, and more! 
-            Join us today to stay organized and improve your well-being.
+            Your Mentalko is here to guide and inspire you on your journey. Whether you're feeling happy, stressed, or in need of motivation, 
+            this little companion is a reminder of your strength and potential. 
         </p>
         <a href="{{ url_for('auth.sign_up') }}" class="btn btn-custom btn-signup mx-2">Sign Up</a>
         <a href="{{ url_for('auth.login') }}" class="btn btn-custom btn-login mx-2">Login</a>

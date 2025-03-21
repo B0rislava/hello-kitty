@@ -3,28 +3,116 @@
 
 {% block content %}
 <div class="container mt-5">
-    <div class="text-center">
-        <div class="position-absolute" style="top: 100px; left: 25px;">
-            <a href="{{ url_for('views.profile') }}" class="text-decoration-none text-dark font-weight-bold">
-                {{ user.first_name }}
-            </a>
-        </div>
+    <!-- Talisman Section -->
+    <div class="position-absolute" style="top: 350px; right: 80px;">
+        <div class="position-relative">
+            <!-- Character -->
+            <img id="character" src="{{ url_for('static', filename='images/default_sprite.png') }}" alt="Character"
+                 class="img-fluid" style="width: 100px; height: 100px;">
 
-        <!-- Персонаж и аксесоар -->
-        <div class="d-flex justify-content-center align-items-center mt-5">
-            <div class="position-relative">
-                <!-- Персонаж -->
-                <img id="character" src="{{ url_for('static', filename='images/default_sprite.png') }}" alt="Character"
-                     class="img-fluid" style="width: 120px; height: 120px;">
-
-                <!-- Изображение на аксесоара, ако има такъв -->
-                {% if session.get('accessory') %}
-                    <img id="accessory" src="{{ url_for('static', filename='images/' + session['accessory']) }}"
-                         class="position-absolute start-50 translate-middle-x"
-                         style="top: 0px; left: 0px; width: 120px; height: 120px;">
-                {% endif %}
-            </div>
+            <!-- Accessory Image (if available) -->
+            {% if session.get('accessory') %}
+                <img id="accessory" src="{{ url_for('static', filename='images/' + session['accessory']) }}"
+                     class="position-absolute start-50 translate-middle-x"
+                     style="top: 0px; left: 0px; width: 100px; height: 100px;">
+            {% endif %}
         </div>
     </div>
+
+    <!-- Greeting Section -->
+    <div class="text-center">
+        <h2 id="greeting-text" class="mb-3" style="font-family: 'Lora', serif; color: #495057;"></h2>
+        
+        <script>
+            function getGreeting() {
+                let now = new Date();
+                let hour = now.getHours();
+                let greeting;
+
+                if (hour < 12) {
+                    greeting = "Good morning, {{ user.first_name }}! 🌞";
+                } else if (hour < 18) {
+                    greeting = "Good afternoon, {{ user.first_name }}! ☀️";
+                } else {
+                    greeting = "Good evening, {{ user.first_name }}! 🌙";
+                }
+                document.getElementById("greeting-text").innerText = greeting;
+            }
+            getGreeting();
+        </script>
+    </div>
+
+    <!-- Daily Affirmation Section -->
+    <div class="mt-4 text-center">
+        <h4 id="affirmation-text" style="color: #6fb6b6; font-family: 'Lora', serif;"></h4>
+    </div>
+
+    <script>
+        function getDailyAffirmation() {
+            const affirmations = [
+                "You are capable of achieving great things.",
+                "Believe in yourself and all that you are.",
+                "Every day is a new opportunity to grow.",
+                "You are stronger than you think.",
+                "Your potential is limitless.",
+                "You are worthy of love and respect.",
+                "Keep going, you are doing amazing!",
+                "Happiness is a choice, and today you choose joy."
+            ];
+            const randomIndex = Math.floor(Math.random() * affirmations.length);
+            document.getElementById("affirmation-text").innerText = affirmations[randomIndex];
+        }
+        getDailyAffirmation();
+    </script>
+
+    <!-- Mood Check-In Section -->
+    <div class="mt-5 text-center">
+        <h4 style="color: #495057; font-family: 'Lora', serif;">How are you feeling today?</h4>
+        <div class="d-flex justify-content-center mt-3">
+            <button class="btn btn-outline-success mx-2 mood-btn" data-mood="happy" style="font-family: 'Lora', serif;">Happy 😊</button>
+            <button class="btn btn-outline-primary mx-2 mood-btn" data-mood="sad" style="font-family: 'Lora', serif;">Sad 😢</button>
+            <button class="btn btn-outline-warning mx-2 mood-btn" data-mood="stressed" style="font-family: 'Lora', serif;">Stressed 😟</button>
+            <button class="btn btn-outline-info mx-2 mood-btn" data-mood="motivated" style="font-family: 'Lora', serif;">Motivated 💪</button>
+            <button class="btn btn-outline-secondary mx-2 mood-btn" data-mood="tired" style="font-family: 'Lora', serif;">Tired 😴</button>
+        </div>
+        <p id="mood-suggestion" class="mt-4" style="color: #6fb6b6; font-family: 'Lora', serif;"></p>
+    </div>
+
+    <script>
+        document.querySelectorAll(".mood-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                const mood = this.getAttribute("data-mood");
+                const suggestions = {
+                    happy: "That's wonderful! Keep spreading positivity and enjoy your day! 🌟",
+                    sad: "It's okay to feel sad sometimes. Take a deep breath and do something you love. 💖",
+                    stressed: "Try some deep breathing or a short walk to clear your mind. You've got this! 🌿",
+                    motivated: "Amazing! Channel that energy into achieving your goals today! 🚀",
+                    tired: "Rest is important. Take a break and recharge your energy. 🌙"
+                };
+                document.getElementById("mood-suggestion").innerText = suggestions[mood];
+            });
+        });
+    </script>
+
+    <!-- Fun Fact Section -->
+    <div class="mt-5 text-center">
+        <h4 style="color: #495057; font-family: 'Lora', serif;">Did You Know?</h4>
+        <p id="fun-fact" style="color: #6fb6b6; font-family: 'Lora', serif;"></p>
+    </div>
+
+    <script>
+        function getFunFact() {
+            const facts = [
+                "Cats sleep for 70% of their lives.",
+                "The Eiffel Tower can be 15 cm taller during the summer.",
+                "Honey never spoils. Archaeologists have found pots of honey in ancient Egyptian tombs that are over 3,000 years old!",
+                "Bananas are berries, but strawberries aren't.",
+                "Octopuses have three hearts."
+            ];
+            const randomIndex = Math.floor(Math.random() * facts.length);
+            document.getElementById("fun-fact").innerText = facts[randomIndex];
+        }
+        getFunFact();
+    </script>
 </div>
 {% endblock %}
