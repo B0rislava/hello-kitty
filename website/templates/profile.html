@@ -96,39 +96,48 @@
                 <h5>Customize Your Character</h5>
             </div>
             <div class="card-body">
-                <form method="POST">
-                    <!-- Hair Accessories -->
-                    <h6>Hair Accessories</h6>
-                    <div class="d-flex mb-3">
-                        <button class="accessory-btn btn btn-light border mx-1" name="accessory" value="hairpins.png">
-                            <img src="{{ url_for('static', filename='images/hairpins.png') }}" style="width: 40px; height: 40px;">
-                        </button>
-                        <button class="accessory-btn btn btn-light border mx-1" name="accessory" value="bow.png">
-                            <img src="{{ url_for('static', filename='images/bow.png') }}" style="width: 40px; height: 40px;">
-                        </button>
-                    </div>
+   <form method="POST">
+    <!-- Hair Accessories -->
+    <h6>Hair Accessories</h6>
+    <div class="d-flex mb-3">
+        <button class="accessory-btn btn btn-light border mx-1" name="hair_accessory" value="hairpins.png">
+            <img src="{{ url_for('static', filename='images/hairpins.png') }}" style="width: 40px; height: 40px;">
+        </button>
+        <button class="accessory-btn btn btn-light border mx-1" name="hair_accessory" value="bow.png">
+            <img src="{{ url_for('static', filename='images/bow.png') }}" style="width: 40px; height: 40px;">
+        </button>
+        <!-- Clear Button for Hair Accessories -->
+        <button class="accessory-btn btn btn-light border mx-1" name="hair_accessory" value="none" style="background-color: #ffdddd;">
+            ❌
+        </button>
+    </div>
 
-                    <!-- Clothes -->
-                    <h6>Clothes</h6>
-                    <div class="d-flex mb-3">
-                        <button class="accessory-btn btn btn-light border mx-1" name="accessory" value="dress.png">
-                            <img src="{{ url_for('static', filename='images/dress.png') }}" style="width: 40px; height: 40px;">
-                        </button>
-                    </div>
+    <!-- Clothes -->
+    <h6>Clothes</h6>
+    <div class="d-flex mb-3">
+        <button class="accessory-btn btn btn-light border mx-1" name="clothing" value="dress.png">
+            <img src="{{ url_for('static', filename='images/dress.png') }}" style="width: 40px; height: 40px;">
+        </button>
+        <!-- Clear Button for Clothes -->
+        <button class="accessory-btn btn btn-light border mx-1" name="clothing" value="none" style="background-color: #ffdddd;">
+            ❌
+        </button>
+    </div>
 
-                    <!-- Jewelry -->
-                    <h6>Jewelry</h6>
-                    <div class="d-flex mb-3">
-                        <button class="accessory-btn btn btn-light border mx-1" name="accessory" value="necklace.png">
-                            <img src="{{ url_for('static', filename='images/necklace.png') }}" style="width: 40px; height: 40px;">
-                        </button>
-                    </div>
+    <!-- Jewelry -->
+    <h6>Jewelry</h6>
+    <div class="d-flex mb-3">
+        <button class="accessory-btn btn btn-light border mx-1" name="jewelry" value="necklace.png">
+            <img src="{{ url_for('static', filename='images/necklace.png') }}" style="width: 40px; height: 40px;">
+        </button>
+        <!-- Clear Button for Jewelry -->
+        <button class="accessory-btn btn btn-light border mx-1" name="jewelry" value="none" style="background-color: #ffdddd;">
+            ❌
+        </button>
+    </div>
 
-                    <!-- Clear Accessory -->
-                    <button class="accessory-btn btn btn-light border mx-1" name="accessory" value="none">
-                        ❌ Clear Accessory
-                    </button>
-                </form>
+</form>
+
             </div>
         </div>
     </div>

@@ -20,23 +20,35 @@ def welcome():
 def home():
     return render_template("home.html", user=current_user)
 
+
 @views.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
-    # If the user submits a form (e.g., accessory customization)
+    # Ако потребителят изпрати форма
     if request.method == 'POST':
-        accessory = request.form.get('accessory')
-        session['accessory'] = accessory
+        # Запазваме избора на аксесоари по категории
+        hair_accessory = request.form.get('hair_accessory')
+        clothing = request.form.get('clothing')
+        jewelry = request.form.get('jewelry')
+
+        # Запазваме в сесията
+        session['hair_accessory'] = hair_accessory
+        session['clothing'] = clothing
+        session['jewelry'] = jewelry
+
         return redirect(url_for('views.profile'))
 
-    # Fetch survey results from the database for the current user
-    introvert = current_user.introvert or 3  # Default to 3 if no value is set
+    # Извличаме стойности от сесията за аксесоарите
+    hair_accessory = session.get('hair_accessory', '')
+    clothing = session.get('clothing', '')
+    jewelry = session.get('jewelry', '')
+
+    # Извличаме стойности от базата данни за потребителя
+    introvert = current_user.introvert or 3
     analytical = current_user.analytical or 3
     loyal = current_user.loyal or 3
     passive = current_user.passive or 3
-    accessory = session.get('accessory', '')
 
-    # Render the profile page with the fetched values
     return render_template(
         "profile.html",
         user=current_user,
@@ -44,8 +56,11 @@ def profile():
         analytical=analytical,
         loyal=loyal,
         passive=passive,
-        accessory=accessory
+        hair_accessory=hair_accessory,
+        clothing=clothing,
+        jewelry=jewelry
     )
+
 
 
 @views.route('/redirect_to_profile')
