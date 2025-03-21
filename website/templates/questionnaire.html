@@ -2,31 +2,40 @@
 <html lang="bg">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Въпросник</title>
 </head>
 <body>
-    <h1>Попълнете въпросника</h1>
-    <form method="POST">
-    {{ form.hidden_tag() }}
+    <h1>Въпроси за анкета</h1>
 
-    {% for field in form if field.type != 'SubmitField' and field.type != 'CSRFTokenField' %}
-        <p>{{ field.label }}</p>
-        <div>
-            {{ field() }}
-        </div>
-    {% endfor %}
-
-    <p>{{ form.submit() }}</p>
-</form>
-
+    <!-- Показване на съобщения (успех или грешка) -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             <ul>
-            {% for category, message in messages %}
-                <li class="flash {{ category }}">{{ message }}</li>
-            {% endfor %}
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
             </ul>
         {% endif %}
     {% endwith %}
+
+    <!-- Формата за въпросите -->
+    <form method="POST">
+        {% for question in questions %}
+            <div>
+                <h3>{{ question.text }}</h3> <!-- Показване на текста на въпроса -->
+
+                <!-- Извеждаме отговорите за всеки въпрос -->
+                {% for answer in question.answers %}
+                    <label>
+                        <input type="radio" name="question_{{ question.id }}" value="{{ answer.id }}">
+                        {{ answer.text }}
+                    </label><br>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+        <button type="submit">Запиши отговорите</button>
+    </form>
 </body>
 </html>

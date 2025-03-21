@@ -1,5 +1,6 @@
 from . import db
 from flask_login import UserMixin
+from website import db
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -24,9 +25,9 @@ class UserAnswer(db.Model):
     answer_id = db.Column(db.Integer, db.ForeignKey('answer.id'), nullable=False)
 
 
-    @staticmethod
-    def create_answer(question_id, answer_text, is_correct=False):
-        new_answer = Answer(question_id=question_id, text=answer_text, is_correct=is_correct)
-        db.session.add(new_answer)
-        db.session.commit()
-        return new_answer
+    # @staticmethod
+    # def create_answer(question_id, answer_text, is_correct=False):
+    #     new_answer = Answer(question_id=question_id, text=answer_text, is_correct=is_correct)
+    #     db.session.add(new_answer)
+    #     db.session.commit()
+    #     return new_answer
