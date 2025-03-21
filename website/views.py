@@ -1,5 +1,7 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, flash
+from flask import Blueprint, render_template, request, flash, redirect, url_for, flash, session
 from flask_login import login_required, current_user
+from werkzeug.security import generate_password_hash
+
 from .models import Note
 from . import db
 from datetime import datetime, timedelta
@@ -19,10 +21,15 @@ def welcome():
 def home():
     return render_template("home.html", user=current_user)
 
-@views.route('/profile')
+@views.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
+    if request.method == 'POST':
+        accessory = request.form.get('accessory')
+        session['accessory'] = accessory
+
     return render_template("profile.html", user=current_user)
+
 
 
 @views.route('/redirect_to_profile')
@@ -82,3 +89,31 @@ def meditation():
 @views.route('/articles')
 def articles():
     return render_template('articles.html', user=current_user)
+
+
+@views.route('/edit-profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    if request.method == 'POST':
+        new_name = request.form.get('first_name')
+        new_email = request.form.get('email')
+        new_password = request.form.get('password')
+
+        # Обновяване на името и имейла
+        if new_name:
+            current_user.first_name = new_name
+        if new_email:
+            current_user.email = new_email
+
+        if new_password:
+            if len(new_password) >= 8:
+                current_user.password = generate_password_hash(new_password)
+            else:
+                flash("Password must be at least 8 characters long.", "error")
+                return redirect(url_for('views.edit_profile'))
+
+        db.session.commit()
+        flash("Profile updated successfully!", "success")
+        return redirect(url_for('views.profile'))
+
+    return render_template('edit_profile.html', user=current_user)
