@@ -1,0 +1,127 @@
+{% extends "base.html"%}
+{% block title %}Articles{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center" style="color: #6fb6b6; font-family: 'Poppins', sans-serif;">Articles</h1>
+    <p class="text-center" style="color: #495057; font-family: 'Poppins', sans-serif;">
+        Explore our latest articles and resources to stay informed and inspired.
+    </p>
+
+    <!-- Article 1 -->
+    <div class="card shadow-lg mt-4" style="border-radius: 15px;">
+        <div class="card-header" style="background: #6fb6b6; color: #ffffff; font-family: 'Poppins', sans-serif;">
+            <h5>Understanding Mental Health: The Key to a Balanced Life</h5>
+        </div>
+        <div class="card-body" style="font-family: 'Poppins', sans-serif;">
+            <p>Mental health is just as important as physical health, yet many people overlook it. Understanding what mental well-being means and how to nurture it can significantly improve your quality of life.</p>
+            <button id="learnMoreBtn1" class="btn btn-sm" style="background: #6fb6b6; color: #ffffff; border-radius: 20px;">Learn More</button>
+            <p id="moreText1" style="display: none; margin-top: 10px;">Mental health refers to our emotional, psychological, and social well-being. It affects how we think, feel, and interact with others. Good mental health allows us to cope with stress, work productively, and enjoy life.
+
+                🔹 Signs of Good Mental Health:
+                
+                A positive self-image and confidence
+                The ability to handle stress and setbacks
+                Healthy relationships and social connections
+                On the other hand, prolonged stress, anxiety, or sadness may indicate a mental health issue. Seeking support from friends, family, or professionals is essential when needed.
+                
+                💡 Tip: Taking care of your mental health through self-care, mindfulness, and seeking help when necessary is key to a balanced life..</p>
+        </div>
+    </div>
+
+    <!-- Article 2 -->
+    <div class="card shadow-lg mt-4" style="border-radius: 15px;">
+        <div class="card-header" style="background: #6fb6b6; color: #ffffff; font-family: 'Poppins', sans-serif;">
+            <h5>Stress Management: 5 Simple Techniques to Stay Calm</h5>
+        </div>
+        <div class="card-body" style="font-family: 'Poppins', sans-serif;">
+            <p>Stress is a natural response to challenges, but excessive stress can negatively impact your health. Learning how to manage stress effectively can improve your well-being and daily productivity.</p>
+            <button id="learnMoreBtn2" class="btn btn-sm" style="background: #6fb6b6; color: #ffffff; border-radius: 20px;">Learn More</button>
+            <p id="moreText2" style="display: none; margin-top: 10px;">Stress triggers a "fight or flight" response in our bodies, increasing heart rate and tension. While short-term stress can be beneficial, chronic stress can lead to burnout, anxiety, and even physical illness.
+
+                🔹 5 Techniques to Reduce Stress:
+                
+                Deep Breathing – Try the 4-7-8 method: inhale for 4 seconds, hold for 7, and exhale for 8.
+                Exercise – Physical activity releases endorphins, reducing stress levels.
+                Mindfulness & Meditation – Practicing mindfulness helps you stay present and calm.
+                Time Management – Prioritizing tasks can prevent overwhelm.
+                Social Support – Talking to a friend or therapist can provide relief.
+                💡 Tip: Small daily changes, like a 10-minute walk or short breathing exercises, can make a big difference in stress reduction!</p>
+        </div>
+    </div>
+
+    <!-- Article 3 -->
+    <div class="card shadow-lg mt-4" style="border-radius: 15px;">
+        <div class="card-header" style="background: #6fb6b6; color: #ffffff; font-family: 'Poppins', sans-serif;">
+            <h5>The Impact of Social Media on Mental Health</h5>
+        </div>
+        <div class="card-body" style="font-family: 'Poppins', sans-serif;">
+            <p>Social media connects us, but it also affects our mental health in ways we may not realize. Understanding its impact can help us develop a healthier relationship with technology.</p>
+            <button id="learnMoreBtn3" class="btn btn-sm" style="background: #6fb6b6; color: #ffffff; border-radius: 20px;">Learn More</button>
+            <p id="moreText3" style="display: none; margin-top: 10px;">While social media offers entertainment and connection, excessive use can lead to anxiety, low self-esteem, and even depression. The pressure to present a "perfect" life online can distort reality and increase feelings of inadequacy.
+
+🔹 Negative Effects of Social Media:
+
+Constant comparison to others
+Reduced attention span and productivity
+Increased feelings of loneliness
+🔹 How to Use Social Media Mindfully:
+
+Set time limits – Avoid endless scrolling.
+Curate your feed – Follow accounts that inspire positivity.
+Take breaks – Digital detoxes can improve mental clarity.
+💡 Tip: Be mindful of how social media makes you feel. If it brings more stress than joy, consider adjusting your usage.
+
+</p>
+        </div>
+    </div>
+
+    <!-- Article 4 -->
+    <div class="card shadow-lg mt-4" style="border-radius: 15px;">
+        <div class="card-header" style="background: #6fb6b6; color: #ffffff; font-family: 'Poppins', sans-serif;">
+            <h5>When to Seek Professional Help for Mental Health</h5>
+        </div>
+        <div class="card-body" style="font-family: 'Poppins', sans-serif;">
+            <p>Everyone experiences stress and sadness, but when do these feelings signal something more serious? Knowing when to seek professional help is crucial for long-term mental well-being.</p>
+            <button id="learnMoreBtn4" class="btn btn-sm" style="background: #6fb6b6; color: #ffffff; border-radius: 20px;">Learn More</button>
+            <p id="moreText4" style="display: none; margin-top: 10px;">Mental health struggles can range from mild stress to severe conditions like depression and anxiety disorders. If negative emotions interfere with daily life, professional help may be needed.
+
+                🔹 Signs That You Should Seek Help:
+                
+                Persistent sadness or hopelessness
+                Trouble sleeping or drastic mood changes
+                Loss of interest in activities you once enjoyed
+                Difficulty managing stress or emotions
+                🔹 Where to Find Support:
+                
+                Therapists and counselors
+                Support groups and helplines
+                Online therapy platforms
+                💡 Tip: Seeking help is a sign of strength, not weakness. Mental health professionals can provide guidance and strategies for a healthier mind.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // JavaScript to handle the "Learn More" buttons
+    document.getElementById('learnMoreBtn1').addEventListener('click', function() {
+        document.getElementById('moreText1').style.display = 'block';
+        this.style.display = 'none';
+    });
+
+    document.getElementById('learnMoreBtn2').addEventListener('click', function() {
+        document.getElementById('moreText2').style.display = 'block';
+        this.style.display = 'none';
+    });
+
+    document.getElementById('learnMoreBtn3').addEventListener('click', function() {
+        document.getElementById('moreText3').style.display = 'block';
+        this.style.display = 'none';
+    });
+
+    document.getElementById('learnMoreBtn4').addEventListener('click', function() {
+        document.getElementById('moreText4').style.display = 'block';
+        this.style.display = 'none';
+    });
+</script>
+{% endblock %}
