@@ -55,10 +55,10 @@
 </div>
 
 <script>
-    let timerInterval;
-    let request_sent = false;
+let timerInterval;
+let request_sent = false;
 
-    document.getElementById('start-button').addEventListener('click', function (event) {
+document.getElementById('start-button').addEventListener('click', function (event) {
     event.preventDefault();
     const durationInput = document.getElementById('duration');
     const duration = parseInt(durationInput.value);
@@ -90,25 +90,29 @@
             clearInterval(timerInterval);
             alert('Meditation session complete!');
 
-            if (!requestSent) {
-                requestSent = true;
+            const currentDate = new Date().toISOString().split('T')[0];
+            const lastMeditationDate = localStorage.getItem('lastMeditationDate');
 
-            fetch('/to-do-list', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    task_data: 'Meditation completed',
-                    completed: true
+            if (!lastMeditationDate || lastMeditationDate !== currentDate) {
+                fetch('/to-do-list', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        task_data: 'Meditation completed',
+                        completed: true
+                    })
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data.message);
-                location.reload(); 
-            })
-            .catch(error => console.error('Error:', error));
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data.message);
+                    localStorage.setItem('lastMeditationDate', currentDate);
+                    location.reload();
+                })
+                .catch(error => console.error('Error:', error));
+            } else {
+                console.log('Meditation task for today has already been logged.');
             }
         }
     }, 1000);
