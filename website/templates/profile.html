@@ -3,24 +3,69 @@
 
 {% block content %}
 <div class="container mt-5">
-    <div class="card mx-auto shadow-lg" style="width: 350px; border-radius: 15px; overflow: hidden;">
-        <div class="card-header text-center" style="background: #6fb6b6; color: #ffffff;">
-            <h3 class="mb-0">Your Profile</h3>
-        </div>
-        <div class="card-body text-center">
-            <!-- Profile Picture Placeholder -->
-            <div class="mb-4">
-                <img src="https://via.placeholder.com/100" alt="Profile Picture" class="rounded-circle shadow" style="width: 100px; height: 100px;">
+    <div class="d-flex justify-content-between align-items-center">
+        <!-- Profile Card -->
+        <div class="card shadow-lg" style="width: 350px; border-radius: 15px; overflow: hidden;">
+            <div class="card-header text-center" style="background: #6fb6b6; color: #ffffff;">
+                <h3 class="mb-0">Your Profile</h3>
             </div>
-            <!-- User Information -->
-            <h5 class="card-title" style="color: #495057;">{{ user.first_name }}</h5>
-            <p class="card-text" style="color: #6c757d;"><strong>Email:</strong> {{ user.email }}</p>
+            <div class="card-body text-center">
+                <!-- Profile Picture -->
+                <div class="mb-4">
+                    <img src="https://via.placeholder.com/100" alt="Profile Picture" class="rounded-circle shadow"
+                         style="width: 100px; height: 100px;">
+                </div>
+                <!-- User Information -->
+                <h5 class="card-title" style="color: #495057;">{{ user.first_name }}</h5>
+                <p class="card-text" style="color: #6c757d;"><strong>Email:</strong> {{ user.email }}</p>
+            </div>
+            <div class="card-footer text-center" style="background: #f8f9fa;">
+                <a href="{{ url_for('auth.logout') }}" class="btn btn-danger btn-sm" style="border-radius: 20px;">
+                    <i class="fa fa-sign-out"></i> Log Out
+                </a>
+            </div>
         </div>
-        <div class="card-footer text-center" style="background: #f8f9fa;">
-            <a href="{{ url_for('auth.logout') }}" class="btn btn-danger btn-sm" style="border-radius: 20px;">
-                <i class="fa fa-sign-out"></i> Log Out
-            </a>
+
+        <!-- Character & Accessories -->
+        <div class="d-flex flex-column align-items-center ms-4">
+            <!-- Character Sprite -->
+            <div class="position-relative">
+                <img id="character" src="{{ url_for('static', filename='images/default_sprite.png') }}" alt="Character"
+                     class="img-fluid" style="width: 220px; height: 220px;">
+                <img id="accessory" src="" class="position-absolute start-50 translate-middle-x" style="top: 0px; width: 100%; height: auto; display: none;">
+            </div>
+
+            <!-- Accessories Selection -->
+            <div class="d-flex mt-3">
+                <button class="accessory-btn btn btn-light border mx-1" onclick="changeAccessory('bow.png')">
+                    <img src="{{ url_for('static', filename='images/bow.png') }}" style="width: 40px; height: 40px;">
+                </button>
+                <button class="accessory-btn btn btn-light border mx-1" onclick="changeAccessory('hairpins.png')">
+                    <img src="{{ url_for('static', filename='images/hairpins.png') }}" style="width: 40px; height: 40px;">
+                </button>
+                <button class="accessory-btn btn btn-light border mx-1" onclick="changeAccessory('necklace.png')">
+                    <img src="{{ url_for('static', filename='images/necklace.png') }}" style="width: 40px; height: 40px;">
+                </button>
+                <button class="accessory-btn btn btn-light border mx-1" onclick="changeAccessory('dress.png')">
+                    <img src="{{ url_for('static', filename='images/dress.png') }}" style="width: 40px; height: 40px;">
+                </button>
+                <button class="accessory-btn btn btn-light border mx-1" onclick="changeAccessory('none')">
+                    ❌
+                </button>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+    function changeAccessory(accessory) {
+        let accImg = document.getElementById("accessory");
+        if (accessory === "none") {
+            accImg.style.display = "none";
+        } else {
+            accImg.src = `/static/images/${accessory}`;
+            accImg.style.display = "block";
+        }
+    }
+</script>
 {% endblock %}
