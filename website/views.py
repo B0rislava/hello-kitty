@@ -118,18 +118,15 @@ def edit_profile():
 
     return render_template('edit_profile.html', user=current_user)
 
-
 @views.route('/update_accessory', methods=['POST'])
 @login_required
 def update_accessory():
-    data = request.get_json()
+    data = request.get_json()  
     accessory = data.get('accessory')
 
-    session['accessory'] = accessory if accessory != 'none' else None
-
-    if accessory:
-        accessory_url = url_for('static', filename=f'images/{accessory}')
+    if accessory == 'none':
+        session.pop('accessory', None)
     else:
-        accessory_url = None
+        session['accessory'] = accessory
 
-    return jsonify({'accessory_url': accessory_url})
+    return jsonify({'accessory': session.get('accessory')})
