@@ -23,43 +23,29 @@ def home():
 @views.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
-    # Ако е изпратена форма за анкета (POST заявка)
+    # If the user submits a form (e.g., accessory customization)
     if request.method == 'POST':
-        # Получаваме отговорите от анкетата
-        introvert_score = int(request.form.get('introvert', 3))  # Стойността на "Introvert" с default стойност 3
-        analytical_score = int(request.form.get('analytical', 3))
-        loyal_score = int(request.form.get('loyal', 3))
-        passive_score = int(request.form.get('passive', 3))
-
-        # Записваме тези стойности в сесията
-        session['introvert'] = introvert_score
-        session['analytical'] = analytical_score
-        session['loyal'] = loyal_score
-        session['passive'] = passive_score
-
-        # Ако има аксесоар в сесията (независимо от анкетата), записваме и това
         accessory = request.form.get('accessory')
         session['accessory'] = accessory
-
-        # Пренасочване обратно към профила (за да се обновят данните)
         return redirect(url_for('views.profile'))
 
-    # Извличаме стойностите от сесията, ако ги има
-    introvert = session.get('introvert', 3)
-    analytical = session.get('analytical', 3)
-    loyal = session.get('loyal', 3)
-    passive = session.get('passive', 3)
+    # Fetch survey results from the database for the current user
+    introvert = current_user.introvert or 3  # Default to 3 if no value is set
+    analytical = current_user.analytical or 3
+    loyal = current_user.loyal or 3
+    passive = current_user.passive or 3
     accessory = session.get('accessory', '')
 
-    # Показваме профила на потребителя и добавяме тези стойности към шаблона
-    return render_template("profile.html",
-                           user=current_user,
-                           introvert=introvert,
-                           analytical=analytical,
-                           loyal=loyal,
-                           passive=passive,
-                           accessory=accessory)
-
+    # Render the profile page with the fetched values
+    return render_template(
+        "profile.html",
+        user=current_user,
+        introvert=introvert,
+        analytical=analytical,
+        loyal=loyal,
+        passive=passive,
+        accessory=accessory
+    )
 
 
 @views.route('/redirect_to_profile')
@@ -215,3 +201,27 @@ def update_mood():
     mood = data.get('mood', 'happy')  # Default mood is 'happy'
     session['mood'] = mood
     return jsonify({'mood': mood})
+
+
+
+
+@views.route('/survey', methods=['GET', 'POST'])
+@login_required
+def survey():
+    if request.method == 'POST':
+   
+        introvert_score = int(request.form['introvert'])
+        analytical_score = int(request.form['analytical'])
+        loyal_score = int(request.form['loyal'])
+        passive_score = int(request.form['passive'])
+
+        user = current_user
+        user.introvert = introvert_score
+        user.analytical = analytical_score
+        user.loyal = loyal_score
+        user.passive = passive_score
+        db.session.commit()
+
+        return redirect(url_for('views.profile'))
+
+    return render_template('survey.html')

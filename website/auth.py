@@ -66,34 +66,10 @@ def sign_up():
             login_user(new_user, remember=True)
             flash("Account created!", category='success')
 
-            # Пренасочваме към анкета за личността
-            return redirect(url_for('auth.survey'))
+            return redirect(url_for('views.survey'))
 
     return render_template("sign_up.html", user=current_user)
 
-
-@auth.route('/survey', methods=['GET', 'POST'])
-@login_required
-def survey():
-    if request.method == 'POST':
-        # Вземаме отговорите от формата
-        introvert_score = int(request.form['introvert'])
-        analytical_score = int(request.form['analytical'])
-        loyal_score = int(request.form['loyal'])
-        passive_score = int(request.form['passive'])
-
-        # Записваме резултатите в потребителския профил
-        user = current_user
-        user.introvert = introvert_score
-        user.analytical = analytical_score
-        user.loyal = loyal_score
-        user.passive = passive_score
-        db.session.commit()
-
-        # Пренасочваме към профила
-        return redirect(url_for('views.profile'))
-
-    return render_template('survey.html')
 
 @auth.route('/delete_profile', methods=['POST'])
 @login_required
