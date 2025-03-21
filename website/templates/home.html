@@ -24,8 +24,12 @@
             <img id="character" src="{{ url_for('static', filename='images/default_sprite.png') }}" 
                  alt="Character" class="img-fluid" style="width: 220px; height: 220px;">
 
-            <!-- Mood Image (dynamically set based on session) -->
+            <!-- Mouth Image (dynamically set based on session) -->
             <img id="mouth" src="{{ url_for('static', filename='images/mouth_' + (session.get('mood', 'happy')) + '.png') }}"
+                 class="position-absolute start-50 translate-middle-x" style="width: 220px; height: 220px;top: 0px; left: 110px; transform: translateX(-50%);">
+
+            <!-- Eyes Image (dynamically set based on sleep duration) -->
+            <img id="eyes" src="{{ url_for('static', filename='images/eyes_normal.png') }}"
                  class="position-absolute start-50 translate-middle-x" style="width: 220px; height: 220px;top: 0px; left: 110px; transform: translateX(-50%);">
 
             {% if session.get('accessory') %}
@@ -109,28 +113,39 @@
     getFunFact();
 
     function updateSleepBar(hours) {
-    let percentage = Math.min((hours / 10) * 100, 100);  // Максимум 100% за 10 часа сън
-    let sleepBar = document.getElementById("sleep-bar");
-    let sleepText = document.getElementById("sleep-hours-text");
+        let percentage = Math.min((hours / 10) * 100, 100);
+        let sleepBar = document.getElementById("sleep-bar");
+        let sleepText = document.getElementById("sleep-hours-text");
 
-    sleepBar.style.width = percentage + "%";
+        sleepBar.style.width = percentage + "%";
 
-    // Променяме цвета на бара в зависимост от продължителността на съня
-    if (hours <= 6) {
-        sleepBar.style.backgroundColor = "#dc3545";  // Червено за по-малко от 6 часа
-    } else if (hours < 10) {
-        sleepBar.style.backgroundColor = "#ffc107";  // Жълто за между 6 и 10 часа
-    } else {
-        sleepBar.style.backgroundColor = "#28a745";  // Зелено за повече от 10 часа
+        if (hours <= 6) {
+            sleepBar.style.backgroundColor = "#dc3545";
+        } else if (hours < 10) {
+            sleepBar.style.backgroundColor = "#ffc107";
+        } else {
+            sleepBar.style.backgroundColor = "#28a745";
+        }
+
+        sleepText.innerText = `You slept ${hours} hours`;
     }
 
-    sleepText.innerText = `You slept ${hours} hours`;  // Показване на текста с продължителността
-}
+    function updateEyesBasedOnSleep(hours) {
+        let eyesImage = document.getElementById("eyes");
 
+        if (hours >= 1 && hours <= 3) {
+            eyesImage.src = "/static/images/eyes_tired2.png";  // Уморени очи
+        } else if (hours >= 4 && hours <= 6) {
+            eyesImage.src = "/static/images/eyes_tired1.png";  // Полу-уморени очи
+        } else {
+            eyesImage.src = "/static/images/eyes_normal.png";  // Нормални очи
+        }
+    }
 
     document.addEventListener("DOMContentLoaded", function () {
         let sleepHours = {{ session.get('sleep_duration', 0) }};
         updateSleepBar(sleepHours);
+        updateEyesBasedOnSleep(sleepHours);
     });
 
     document.querySelectorAll(".mood-btn").forEach(button => {
