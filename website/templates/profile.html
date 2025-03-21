@@ -2,9 +2,10 @@
 {% block title %}Profile{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-center align-items-start">
+<div class="d-flex justify-content-between align-items-start mt-5" style="gap: 30px;">
+
     <!-- Main Profile Block -->
-    <div class="card" style="width: 350px; height: 500px; border-radius: 25px; overflow: hidden; background-color: #def5ff; margin-left: -200px;">
+    <div class="card" style="width: 350px; height: 500px; border-radius: 25px; overflow: hidden; background-color: #def5ff;">
         <div class="card-body p-5">
             <div class="text-center">
                 <!-- Profile Picture -->
@@ -32,10 +33,10 @@
         </div>
     </div>
 
-    <!-- Right Sidebar with Customization (Tamagotchi and Accessories) -->
-    <div class="d-flex flex-column align-items-center ml-5" style="width: 300px; ">
+    <!-- Middle Section (Character) -->
+    <div class="d-flex justify-content-center align-items-center" style="width: 300px; position: relative;">
         <!-- Character Sprite -->
-        <div class="position-relative mb-4">
+        <div class="position-relative">
             <img id="character" src="{{ url_for('static', filename='images/default_sprite.png') }}" alt="Character"
                  class="img-fluid" style="width: 220px; height: 220px;">
             <!-- Default Mouth (non-customizable) -->
@@ -45,10 +46,12 @@
             <img id="accessory" src="{{ url_for('static', filename='images/' + (session.get('accessory', '') or '')) }}"
                  class="position-absolute start-50 translate-middle-x" style="top: 0px; width: 100%; height: auto; display: {{ 'block' if session.get('accessory') else 'none' }};">
         </div>
+    </div>
 
-
+    <!-- Right Sidebar with Customization (Tamagotchi and Accessories) -->
+    <div class="d-flex flex-column align-items-center" style="width: 300px;">
         <!-- Customization Menu -->
-        <div class="card" style="width: 100%; background-color: #f5fff7; border-radius: 15px; ">
+        <div class="card" style="width: 100%; background-color: #f5fff7; border-radius: 15px;">
             <div class="card-header" style="background-color: #6fb6b6; color: #fff; border-radius: 15px 15px 0 0;">
                 <h5>Customize Your Character</h5>
             </div>
@@ -90,6 +93,7 @@
         </div>
     </div>
 </div>
+
 
 
 <script>
