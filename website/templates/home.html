@@ -109,22 +109,24 @@
     getFunFact();
 
     function updateSleepBar(hours) {
-        let percentage = Math.min((hours / 10) * 100, 100);
-        let sleepBar = document.getElementById("sleep-bar");
-        let sleepText = document.getElementById("sleep-hours-text");
+    let percentage = Math.min((hours / 10) * 100, 100);  // Максимум 100% за 10 часа сън
+    let sleepBar = document.getElementById("sleep-bar");
+    let sleepText = document.getElementById("sleep-hours-text");
 
-        sleepBar.style.width = percentage + "%";
+    sleepBar.style.width = percentage + "%";
 
-        if (hours <= 6) {
-            sleepBar.style.backgroundColor = "#dc3545";
-        } else if (hours < 10) {
-            sleepBar.style.backgroundColor = "#ffc107";
-        } else {
-            sleepBar.style.backgroundColor = "#28a745";
-        }
-
-        sleepText.innerText = `You slept ${hours} hours`;
+    // Променяме цвета на бара в зависимост от продължителността на съня
+    if (hours <= 6) {
+        sleepBar.style.backgroundColor = "#dc3545";  // Червено за по-малко от 6 часа
+    } else if (hours < 10) {
+        sleepBar.style.backgroundColor = "#ffc107";  // Жълто за между 6 и 10 часа
+    } else {
+        sleepBar.style.backgroundColor = "#28a745";  // Зелено за повече от 10 часа
     }
+
+    sleepText.innerText = `You slept ${hours} hours`;  // Показване на текста с продължителността
+}
+
 
     document.addEventListener("DOMContentLoaded", function () {
         let sleepHours = {{ session.get('sleep_duration', 0) }};

@@ -127,13 +127,23 @@ def meditation():
 @views.route('/sleep/log', methods=['POST', 'GET'])
 def log_sleep():
     if request.method == 'POST':
-        sleep_duration = get_sleep_duration(current_user.id)
+        # Вземи продължителността на съня за текущия потребител
+        sleeptime_from = request.form.get('sleeptime_from')
+        sleeptime_to = request.form.get('sleeptime_to')
 
-        if sleep_duration:
-            session['sleep_duration'] = sleep_duration[0]
+        if sleeptime_from and sleeptime_to:
+            sleep_from = datetime.strptime(sleeptime_from, '%Y-%m-%dT%H:%M')
+            sleep_to = datetime.strptime(sleeptime_to, '%Y-%m-%dT%H:%M')
 
-        flash('Sleep logged successfully!', 'success')
-        return redirect(url_for('views.home'))
+            sleep_duration = sleep_to - sleep_from
+
+            # Записваме продължителността в сесията
+            session['sleep_duration'] = int(sleep_duration.total_seconds() // 3600)
+
+            flash('Sleep logged successfully!', 'success')
+            return redirect(url_for('views.home'))
+        else:
+            flash('Please provide both start and end time for your sleep!', 'error')
 
     return render_template('sleep.html')
 
