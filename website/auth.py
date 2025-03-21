@@ -60,14 +60,16 @@ def sign_up():
         elif len(password1) < 8 or not any(char.isdigit() for char in password1) or not any(char.isalpha() for char in password1):
             flash("Password must be at least 8 characters long, contain both letters and numbers.", category='error')
         else:
-            new_user = User(email = email, first_name = first_name, password =generate_password_hash(password1))
+            new_user = User(email=email, first_name=first_name, password=generate_password_hash(password1))
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember=True)
             flash("Account created!", category='success')
-            return redirect(url_for('views.home'))
+
+            return redirect(url_for('views.survey'))
 
     return render_template("sign_up.html", user=current_user)
+
 
 @auth.route('/delete_profile', methods=['POST'])
 @login_required

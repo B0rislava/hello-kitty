@@ -23,13 +23,29 @@ def home():
 @views.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
+    # If the user submits a form (e.g., accessory customization)
     if request.method == 'POST':
         accessory = request.form.get('accessory')
         session['accessory'] = accessory
         return redirect(url_for('views.profile'))
 
-    return render_template("profile.html", user=current_user)
+    # Fetch survey results from the database for the current user
+    introvert = current_user.introvert or 3  # Default to 3 if no value is set
+    analytical = current_user.analytical or 3
+    loyal = current_user.loyal or 3
+    passive = current_user.passive or 3
+    accessory = session.get('accessory', '')
 
+    # Render the profile page with the fetched values
+    return render_template(
+        "profile.html",
+        user=current_user,
+        introvert=introvert,
+        analytical=analytical,
+        loyal=loyal,
+        passive=passive,
+        accessory=accessory
+    )
 
 
 @views.route('/redirect_to_profile')
@@ -185,3 +201,27 @@ def update_mood():
     mood = data.get('mood', 'happy')  # Default mood is 'happy'
     session['mood'] = mood
     return jsonify({'mood': mood})
+
+
+
+
+@views.route('/survey', methods=['GET', 'POST'])
+@login_required
+def survey():
+    if request.method == 'POST':
+   
+        introvert_score = int(request.form['introvert'])
+        analytical_score = int(request.form['analytical'])
+        loyal_score = int(request.form['loyal'])
+        passive_score = int(request.form['passive'])
+
+        user = current_user
+        user.introvert = introvert_score
+        user.analytical = analytical_score
+        user.loyal = loyal_score
+        user.passive = passive_score
+        db.session.commit()
+
+        return redirect(url_for('views.profile'))
+
+    return render_template('survey.html')

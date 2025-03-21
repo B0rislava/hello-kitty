@@ -6,11 +6,17 @@ from datetime import datetime
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(150),nullable=False)
+    password = db.Column(db.String(150), nullable=False)
     first_name = db.Column(db.String(150))
-    notes = db.relationship('Note', backref='user', lazy=True) 
-    streak_record = db.Column(db.Integer, default=0) 
+    notes = db.relationship('Note', backref='user', lazy=True)
+    streak_record = db.Column(db.Integer, default=0)
     last_active = db.Column(db.Date, default=datetime.utcnow().date())
+
+    introvert = db.Column(db.Integer, default=3)  # 1: introvert, 5: extrovert
+    analytical = db.Column(db.Integer, default=3)  # 1: analytical, 5: creative
+    loyal = db.Column(db.Integer, default=3)  # 1: loyal, 5: fickle
+    passive = db.Column(db.Integer, default=3)  # 1: passive, 5: active
+
 
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)
