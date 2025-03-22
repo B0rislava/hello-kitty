@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import current_user, login_required
-from .models import Note, DailyChallenges
+from .models import Note
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
@@ -16,7 +16,7 @@ def update_streak(user):
     
     incomplete_notes = Note.query.filter_by(user_id=user.id, completed=False).count()
 
-    if incomplete_notes == 0 and has_completed_meditation_today(user):
+    if incomplete_notes == 0:
         if user.streak_record == today - timedelta(days=1):
             user.streak_record=+ 1
         else:
@@ -32,12 +32,4 @@ def record_activity():
     update_streak(user)
     return render_template('to_do_list.html', streak_record=user.streak_record)
 
-def has_completed_meditation_today(user):
-    today = datetime.utcnow().date()
-
-    meditation_completed = DailyChallenges.query.filter_by(
-        user_id=user.id, completed=True
-    ).filter(DailyChallenges.meditation_timestamp >= today).count()
-
-    return meditation_completed > 0 
 

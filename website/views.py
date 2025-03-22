@@ -73,7 +73,6 @@ def redirect_to_profile():
 @login_required
 def to_do_list():
     update_streak(current_user)
-
     if request.method == 'POST':
         if request.is_json:
             meditation_data = request.get_json()
