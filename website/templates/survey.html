@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personality Test</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        .form-range {
+            width: 100%;
+            height: 5px;
+            background-color: #ddd;
+            border-radius: 5px;
+            transition: background-color 0.2s ease;
+        }
+
+        .form-range:focus {
+            background-color: #6fb6b6;
+        }
+
+        .btn {
+            background-color: #6fb6b6;
+            border: none;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #4da6a6;
+        }
+
+        h2 {
+            font-family: 'Lora', serif;
+            color: #495057;
+        }
+
+        h5 {
+            font-family: 'Lora', serif;
+            color: #6fb6b6;
+        }
+
+        .d-flex {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .intro-text {
+            font-size: 1.25rem;
+            color: #495057;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .slider-container {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #f7f7f7;
+        }
+
+        .slider-container h5 {
+            font-family: 'Lora', serif;
+            color: #6fb6b6;
+            text-align: center;
+        }
+
+        .slider-container .form-range {
+            height: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="intro-text">
+        <p>Thank you for signing up! Before continuing please do this short test:</p>
+    </div>
+
+    <h2 class="text-center mb-4" style="font-family: 'Lora', serif; color: #495057;">Personality Test: Introvert vs. Extrovert</h2>
+
+    <form method="POST">
+        <div class="slider-container">
+            <h5>How introverted or extroverted are you?</h5>
+            <input type="range" name="introvert" min="1" max="5" step="1" value="3" class="form-range" id="introvert-range">
+            <div class="d-flex justify-content-between">
+                <span>Introvert</span>
+                <span>Extrovert</span>
+            </div>
+        </div>
+
+        <div class="slider-container">
+            <h5>Are you more analytical or creative?</h5>
+            <input type="range" name="analytical" min="1" max="5" step="1" value="3" class="form-range" id="analytical-range">
+            <div class="d-flex justify-content-between">
+                <span>Analytical</span>
+                <span>Creative</span>
+            </div>
+        </div>
+
+        <div class="slider-container">
+            <h5>How loyal or fickle are you?</h5>
+            <input type="range" name="loyal" min="1" max="5" step="1" value="3" class="form-range" id="loyal-range">
+            <div class="d-flex justify-content-between">
+                <span>Loyal</span>
+                <span>Fickle</span>
+            </div>
+        </div>
+
+        <div class="slider-container">
+            <h5>Are you more passive or active?</h5>
+            <input type="range" name="passive" min="1" max="5" step="1" value="3" class="form-range" id="passive-range">
+            <div class="d-flex justify-content-between">
+                <span>Passive</span>
+                <span>Active</span>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary" style="border-radius: 30px; padding: 10px 20px;">Submit</button>
+        </div>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

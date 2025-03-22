@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="position-fixed start-0 top-50 translate-middle-y p-3" style="width: 250px;">
+        <h5 class="text-center">Sleep Duration</h5>
+        <div class="progress" style="height: 30px;">
+            <div id="sleep-bar" class="progress-bar" role="progressbar" 
+                 style="width: 0%; background-color: #6fb6b6; transition: width 1s;" 
+                 aria-valuemin="0" aria-valuemax="100">
+            </div>
+        </div>
+        <p class="text-center mt-2" id="sleep-hours-text"></p>
+        <div class="text-center mt-3">
+            <a href="{{ url_for('views.log_sleep') }}" class="btn btn-outline-primary w-100" style="border-radius: 20px;">Log Your Sleep</a>
+        </div>
+    </div>
+
+    <!-- Character -->
+    <div class="position-absolute" style="top: 260px; right: 260px;">
+        <div class="position-relative">
+            <img id="character" src="{{ url_for('static', filename='images/default_sprite.png') }}" 
+                 alt="Character" class="img-fluid" style="width: 220px; height: 220px;">
+
+            <!-- Mouth Image (dynamically set based on session) -->
+            <img id="mouth" src="{{ url_for('static', filename='images/mouth_' + (session.get('mood', 'happy')) + '.png') }}"
+                 class="position-absolute start-50 translate-middle-x" style="width: 220px; height: 220px;top: 0px; left: 110px; transform: translateX(-50%);">
+
+            <!-- Eyes Image (dynamically set based on sleep duration) -->
+            <img id="eyes" src="{{ url_for('static', filename='images/eyes_normal.png') }}"
+                 class="position-absolute start-50 translate-middle-x" style="width: 220px; height: 220px;top: 0px; left: 110px; transform: translateX(-50%);">
+
+            {% if session.get('accessory') %}
+                <img id="accessory" src="{{ url_for('static', filename='images/' + session['accessory']) }}"
+                     class="position-absolute start-50 translate-middle-x"
+                     style="top: 0px; left: 0px; width: 220px; height: 220px;">
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="text-center">
+        <h2 id="greeting-text" class="mb-3" style="font-family: 'Lora', serif; color: #495057;"></h2>
+    </div>
+
+    <div class="mt-5 text-center">
+        <h4 style="color: #495057; font-family: 'Lora', serif;">Today's Affirmation</h4>
+        <p id="affirmation-text" class="mt-4" style="color: #6fb6b6; font-family: 'Lora', serif;"></p>
+    </div>
+
+    <div class="mt-5 text-center">
+        <h4 style="color: #495057; font-family: 'Lora', serif;">How are you feeling today?</h4>
+        <div class="d-flex justify-content-center mt-3">
+            <button class="btn btn-outline-success mx-2 mood-btn" data-mood="happy">Happy 😊</button>
+            <button class="btn btn-outline-primary mx-2 mood-btn" data-mood="sad">Sad 😢</button>
+            <button class="btn btn-outline-warning mx-2 mood-btn" data-mood="stressed">Stressed 😟</button>
+            <button class="btn btn-outline-info mx-2 mood-btn" data-mood="motivated">Motivated 💪</button>
+            <button class="btn btn-outline-secondary mx-2 mood-btn" data-mood="neutral">Neutral 😴</button>
+        </div>
+        <p id="mood-suggestion" class="mt-4" style="color: #6fb6b6;"></p>
+    </div>
+
+    <div class="mt-5 text-center">
+        <h4 style="color: #495057; font-family: 'Lora', serif;">Did You Know?</h4>
+        <p id="fun-fact" style="color: #6fb6b6;"></p>
+    </div>
+
+<script>
+    function getGreeting() {
+        let now = new Date();
+        let hour = now.getHours();
+        let greeting;
+
+        if (hour < 12) {
+            greeting = "Good morning, {{ user.first_name }}! 🌞";
+        } else if (hour < 18) {
+            greeting = "Good afternoon, {{ user.first_name }}! ☀️";
+        } else {
+            greeting = "Good evening, {{ user.first_name }}! 🌙";
+        }
+        document.getElementById("greeting-text").innerText = greeting;
+    }
+    getGreeting();
+
+    // Daily affirmation
+    function getDailyAffirmation() {
+        const affirmations = [
+            "You are capable of achieving great things.",
+            "Believe in yourself and all that you are.",
+            "Every day is a new opportunity to grow.",
+            "You are stronger than you think.",
+            "Your potential is limitless.",
+            "You are worthy of love and respect.",
+            "Keep going, you are doing amazing!",
+            "Happiness is a choice, and today you choose joy."
+        ];
+        document.getElementById("affirmation-text").innerText = affirmations[Math.floor(Math.random() * affirmations.length)];
+    }
+    getDailyAffirmation();
+
+    // Fun fact
+    function getFunFact() {
+        const facts = [
+            "Cats sleep for 70% of their lives.",
+            "The Eiffel Tower can be 15 cm taller during the summer.",
+            "Honey never spoils. Archaeologists have found pots of honey in ancient Egyptian tombs that are over 3,000 years old!",
+            "Bananas are berries, but strawberries aren't.",
+            "Octopuses have three hearts."
+        ];
+        document.getElementById("fun-fact").innerText = facts[Math.floor(Math.random() * facts.length)];
+    }
+    getFunFact();
+
+    function updateSleepBar(hours) {
+        let percentage = Math.min((hours / 10) * 100, 100);
+        let sleepBar = document.getElementById("sleep-bar");
+        let sleepText = document.getElementById("sleep-hours-text");
+
+        sleepBar.style.width = percentage + "%";
+
+        if (hours >= 1 && hours <= 3) {
+            sleepBar.style.backgroundColor = "#dc3545";
+        } else if (hours >= 4 && hours <= 6) {
+            sleepBar.style.backgroundColor = "#ffc107";
+        } else {
+            sleepBar.style.backgroundColor = "#3fd160";
+        }
+
+        sleepText.innerText = `You slept ${hours} hours`;
+    }
+
+    function updateEyesBasedOnSleep(hours) {
+        let eyesImage = document.getElementById("eyes");
+
+        if (hours >= 1 && hours <= 3) {
+            eyesImage.src = "/static/images/eyes_tired2.png";  // Уморени очи
+        } else if (hours >= 4 && hours <= 6) {
+            eyesImage.src = "/static/images/eyes_tired1.png";  // Полу-уморени очи
+        } else {
+            eyesImage.src = "/static/images/eyes_normal.png";  // Нормални очи
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let sleepHours = {{ session.get('sleep_duration', 0) }};
+        updateSleepBar(sleepHours);
+        updateEyesBasedOnSleep(sleepHours);
+    });
+
+    document.querySelectorAll(".mood-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            const mood = this.getAttribute("data-mood");
+            const suggestions = {
+                happy: "That's wonderful! Keep spreading positivity and enjoy your day! 🌟",
+                sad: "It's okay to feel sad sometimes. Take a deep breath and do something you love. 💖",
+                stressed: "Try some deep breathing or a short walk to clear your mind. You've got this! 🌿",
+                motivated: "Amazing! Channel that energy into achieving your goals today! 🚀",
+                neutral: "Rest is important. Take a break and recharge your energy. 🌙"
+            };
+            document.getElementById("mood-suggestion").innerText = suggestions[mood];
+
+            // Correct way to dynamically set the mouth image in JavaScript with Jinja2
+            document.getElementById("mouth").src = "/static/images/mouth_" + mood + ".png";
+
+            // Send mood to the server
+            fetch("/update_mood", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mood: mood })
+            });
+        });
+    });
+</script>
+
+</div>
+{% endblock %}

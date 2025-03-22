@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Log Sleep{% endblock %}
+
+{% block content %}
+    <h1 class="text-center my-4" style="color: #6c757d; font-family: 'Lora', serif;">Log Your Sleep</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% endwith %}
+
+    <div class="card shadow-lg" style="border-radius: 15px; background: #f9f9f9;">
+        <div class="card-body">
+            <form method="POST">
+                <div class="mb-3">
+                    <label for="sleeptime_from" class="form-label">Sleep Start Time</label>
+                    <input type="datetime-local" name="sleeptime_from" id="sleeptime_from" class="form-control" style="border-radius: 10px;">
+                </div>
+                <div class="mb-3">
+                    <label for="sleeptime_to" class="form-label">Sleep End Time</label>
+                    <input type="datetime-local" name="sleeptime_to" id="sleeptime_to" class="form-control" style="border-radius: 10px;"> 
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn w-100" style="border-radius: 20px; background: #6fb6b6; color: #ffffff; font-family: 'Poppins', sans-serif;">Log Sleep</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function () {
+            const now = new Date();
+            const yesterday = new Date();
+            yesterday.setDate(now.getDate() - 1);
+            yesterday.setHours(0, 0, 0, 0);
+
+            const yesterdayString = yesterday.toISOString().slice(0, 16);
+            const currentDateString = now.toISOString().slice(0, 16);
+
+            const sleeptimeFrom = document.getElementById('sleeptime_from');
+            const sleeptimeTo = document.getElementById('sleeptime_to');
+
+            if (sleeptimeFrom && sleeptimeTo) {
+                sleeptimeFrom.min = yesterdayString;
+                sleeptimeFrom.max = currentDateString;
+
+                sleeptimeTo.min = sleeptimeFrom.value || yesterdayString;
+                sleeptimeTo.max = currentDateString;
+
+                sleeptimeFrom.addEventListener('change', function () {
+                    sleeptimeTo.min = sleeptimeFrom.value;
+                });
+            }
+        };
+    </script>
+{% endblock %}

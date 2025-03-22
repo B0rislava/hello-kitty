@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block title %}Meditation Timer{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center my-5">
+        <div class="col-md-6">
+            <div class="card shadow-lg rounded-lg" style="background: #ffffff; border-radius: 20px;">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4" style="color: #2a9d8f; font-family: 'Lora', serif;">Set Your Meditation Timer</h2>
+
+                    <form method="POST" class="mt-4 text-center">
+                        <label for="minutes" class="form-label" style="font-size: 1.1rem; color: #264653; display: block; text-align: center;">Choose duration:</label>
+                        <div class="d-flex justify-content-center mb-3">
+                            <input type="number" id="minutes" name="minutes" min="0" max="60" class="form-control form-control-lg" style="border-radius: 12px; padding: 10px; width: 80px;" placeholder="Min" required>
+                            <span style="font-size: 1.5rem; color: #264653; padding: 0 10px;">:</span>
+                            <input type="number" id="seconds" name="seconds" min="0" max="59" class="form-control form-control-lg" style="border-radius: 12px; padding: 10px; width: 80px;" placeholder="Sec" required>
+                        </div>
+
+                        <input type="hidden" id="completed" name="completed" value="false">
+
+                        <button type="submit" id="start-button" class="btn btn-primary mt-4 w-100" style="border-radius: 20px; padding: 12px 20px; font-size: 1.1rem; background: #2a9d8f; border: none;">Start Meditation</button>
+                    </form>
+
+                    <div id="timer-display" class="mt-4 text-center" style="display: none;">
+                        <h3 style="font-size: 1.4rem; color: #264653;">Time Remaining:</h3>
+                        <div id="time-remaining" class="display-4" style="color: #e76f51;">00:00</div>
+                        <button type="button" id="stop-button" class="btn btn-danger mt-3 w-100" style="border-radius: 20px; font-size: 1.1rem;">Stop Timer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg rounded-lg" style="background: #ffffff;">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4" style="color: #2a9d8f; font-family: 'Lora', serif;">Benefits of Meditation</h2>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" style="color: #264653;">Reduces stress</li>
+                        <li class="list-group-item" style="color: #264653;">Controls anxiety</li>
+                        <li class="list-group-item" style="color: #264653;">Promotes emotional health</li>
+                        <li class="list-group-item" style="color: #264653;">Enhances self-awareness</li>
+                        <li class="list-group-item" style="color: #264653;">Lengthens attention span</li>
+                        <li class="list-group-item" style="color: #264653;">May reduce age-related memory loss</li>
+                        <li class="list-group-item" style="color: #264653;">Can generate kindness</li>
+                        <li class="list-group-item" style="color: #264653;">May help fight addictions</li>
+                        <li class="list-group-item" style="color: #264653;">Improves sleep</li>
+                        <li class="list-group-item" style="color: #264653;">Helps control pain</li>
+                        <li class="list-group-item" style="color: #264653;">Can decrease blood pressure</li>
+                        <li class="list-group-item" style="color: #264653;">You can meditate anywhere</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let timerInterval;
+let request_sent = false;
+let timeRemaining = 0;
+
+document.getElementById('start-button').addEventListener('click', function (event) {
+    event.preventDefault();
+    const minutesInput = document.getElementById('minutes');
+    const secondsInput = document.getElementById('seconds');
+    const minutes = parseInt(minutesInput.value);
+    const seconds = parseInt(secondsInput.value);
+
+    if (isNaN(minutes) || isNaN(seconds) || minutes < 0 || seconds < 0 || seconds > 59) {
+        alert('Please enter a valid duration (minutes and seconds).');
+        return;
+    }
+
+    timeRemaining = minutes * 60 + seconds;
+
+    document.querySelector('form').style.display = 'none';
+    document.getElementById('timer-display').style.display = 'block';
+
+    const timeRemainingElement = document.getElementById('time-remaining');
+    updateTimer();
+
+    // Start the timer
+    timerInterval = setInterval(() => {
+        if (timeRemaining > 0) {
+            timeRemaining--;
+            updateTimer();
+        } else {
+            clearInterval(timerInterval);
+            alert('Meditation session complete!');
+
+            const currentDate = new Date().toISOString().split('T')[0];
+            const lastMeditationDate = localStorage.getItem('lastMeditationDate');
+
+            if (!lastMeditationDate || lastMeditationDate !== currentDate) {
+                fetch('/to-do-list', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        task_data: 'Meditation completed',
+                        completed: true
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data.message);
+                    localStorage.setItem('lastMeditationDate', currentDate);
+                    location.reload();
+                })
+                .catch(error => console.error('Error:', error));
+            } else {
+                console.log('Meditation task for today has already been logged.');
+            }
+
+            // Reset timer after completion (if user presses OK in the popup)
+            if (confirm("Would you like to reset the timer?")) {
+                minutesInput.value = 0;
+                secondsInput.value = 0;
+                timeRemainingElement.textContent = '00:00';
+                document.querySelector('form').style.display = 'block';
+                document.getElementById('timer-display').style.display = 'none';
+            }
+        }
+    }, 1000);
+});
+
+document.getElementById('stop-button').addEventListener('click', function() {
+    clearInterval(timerInterval); // Stop the timer
+
+    // Reset the timer display and show the form again
+    const timeRemainingElement = document.getElementById('time-remaining');
+    const minutesInput = document.getElementById('minutes');
+    const secondsInput = document.getElementById('seconds');
+    timeRemainingElement.textContent = '00:00';
+    minutesInput.value = 0;
+    secondsInput.value = 0;
+
+    // Hide the timer and show the form to reset the timer
+    document.querySelector('form').style.display = 'block';
+    document.getElementById('timer-display').style.display = 'none';
+});
+
+function updateTimer() {
+    const timeRemainingElement = document.getElementById('time-remaining');
+    const minutes = Math.floor(timeRemaining / 60);
+    const seconds = timeRemaining % 60;
+    timeRemainingElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+}
+</script>
+
+
+
+{% endblock %}
